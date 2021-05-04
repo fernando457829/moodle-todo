@@ -1,0 +1,83 @@
+{
+  "name": "moodle-todo",
+  "description": "Basic todo app for moodle",
+  "version": "1.0.0",
+  "main": "dist/main.js",
+  "repository": "https://github.com/fernando457829/moodle-todo",
+  "author": "Fernando Silva <fernando457829@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "dev": "npm-run-all -p dev:react electron:serve",
+    "dev:electron": "cross-env NODE_ENV=development webpack --config webpack/electron.webpack.js --mode development && npm run start:electron",
+    "dev:react": "cross-env NODE_ENV=development webpack-dev-server --config webpack/react.webpack.js --mode development",
+    "electron:serve": "wait-on http-get://localhost:4000/ && npm run dev:electron",
+    "start:electron": "electron .",
+    "build": "npm-run-all build:electron build:react",
+    "build:run": "npm-run-all build start:electron",
+    "build:electron": "webpack --config webpack/electron.webpack.js",
+    "build:react": "webpack --config webpack/react.webpack.js",
+    "package": "npm-run-all build package:dist",
+    "package:dist": "electron-builder --dir"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.14.0",
+    "@chakra-ui/icons": "^1.0.12",
+    "@chakra-ui/react": "^1.6.0",
+    "@emotion/react": "^11",
+    "@emotion/styled": "^11",
+    "axios": "^0.21.1",
+    "formik": "^2.2.6",
+    "framer-motion": "^4",
+    "qs": "^6.10.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.2.0",
+    "yup": "^0.32.9"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.0",
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/preset-env": "^7.9.5",
+    "@babel/preset-react": "^7.9.4",
+    "@babel/preset-typescript": "^7.9.0",
+    "@types/electron-devtools-installer": "^2.2.0",
+    "@types/qs": "^6.9.6",
+    "@types/react": "^16.9.34",
+    "@types/react-dom": "^16.9.6",
+    "@types/react-router-dom": "^5.1.7",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
+    "@typescript-eslint/parser": "^4.22.0",
+    "babel-loader": "^8.1.0",
+    "cross-env": "^7.0.2",
+    "electron": "^8.2.2",
+    "electron-builder": "^22.7.0",
+    "electron-devtools-installer": "^3.1.0",
+    "eslint": "^7.3.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "html-webpack-plugin": "^4.2.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^3.9.5",
+    "wait-on": "^5.0.1",
+    "webpack": "^4.42.1",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.10.3"
+  },
+  "build": {
+    "appId": "com.fernando.moodle-todo",
+    "mac": {
+      "category": "public.app-category.video"
+    },
+    "directories": {
+      "output": "packages"
+    },
+    "files": [
+      "package.json",
+      "dist/**"
+    ]
+  }
+}
