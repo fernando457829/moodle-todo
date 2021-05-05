@@ -16,7 +16,9 @@ import {
 } from 'formik';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
+
 import { authenticate, webservice } from '../services/moodle';
+import useData from '../hooks/useData';
 
 const validationSchema = yup.object({
   email: yup
@@ -29,8 +31,8 @@ const validationSchema = yup.object({
 });
 
 export default function Login() {
+  const { dispatch } = useData();
   const history = useHistory();
-
   const toast = useToast({
     position: 'bottom-right',
     status: 'error',
@@ -38,8 +40,6 @@ export default function Login() {
     duration: 5000,
     title: 'Ocorreu um erro.',
   });
-
-  console.log('sdfasdfasdfsdaf');
 
   return (
     <Container height="100vh" display="flex" justifyContent="center" alignItems="center">
@@ -67,14 +67,17 @@ export default function Login() {
               return;
             }
 
-            localStorage.setItem('user', JSON.stringify({
-              token: data.token,
-              id: info.userid,
-            }));
+            dispatch({
+              type: 'add_user',
+              user: {
+                id: info.userid,
+                token: data.token,
+              },
+            });
 
             setSubmitting(false);
 
-            history.push('/home');
+            history.push('/');
           }
         }
       >
