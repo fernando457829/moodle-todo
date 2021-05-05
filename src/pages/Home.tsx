@@ -32,20 +32,22 @@ export default function Home() {
       return;
     }
 
-    if (!courses) {
-      webservice(
+    async function addCourses() {
+      const rawCourses = await webservice(
         user!.token,
         'core_enrol_get_users_courses',
         {
           userid: user!.id,
         },
-      ).then((rawCourses: any[]) => {
-        dispatch({
-          type: 'add_courses',
-          courses: rawCourses.map(({ id, fullname }) => ({ id, name: fullname })),
-        });
+      ) as any[];
+
+      dispatch({
+        type: 'add_courses',
+        courses: rawCourses.map(({ id, fullname }) => ({ id, name: fullname })),
       });
     }
+
+    if (!courses) addCourses();
   }, [user]);
 
   useEffect(() => {
@@ -61,20 +63,22 @@ export default function Home() {
       }
     }
 
-    webservice(
-      user!.token,
-      'core_calendar_get_calendar_events',
-      {
-        events: {
-          courseids: courses.map((course) => course.id),
-        },
+    async function updateAssignments() {
+      const { events } = await webservice(
+        user!.token,
+        'core_calendar_get_calendar_events',
+        {
+          events: {
+            courseids: courses!.map((course) => course.id),
+          },
 
-        options: {
-          siteevents: 0,
-          timestart: Math.floor(new Date().getTime() / 1000),
+          options: {
+            siteevents: 0,
+            timestart: Math.floor(new Date().getTime() / 1000),
+          },
         },
-      },
-    ).then(({ events }: { events: any[] }) => {
+      ) as { events: any[] };
+
       const newAssignments = events
         .filter((event) => event.modulename === 'assign')
         .map(({ id, courseid, name }) => ({
@@ -91,7 +95,9 @@ export default function Home() {
       });
 
       toggleLoading(false);
-    });
+    }
+
+    updateAssignments();
   }, [user, courses, lastUpdate]);
 
   function handleDone(id: number) {
