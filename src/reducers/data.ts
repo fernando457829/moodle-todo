@@ -7,6 +7,7 @@ import {
 } from '../types';
 
 export type Action =
+  | { type: 'add_url', url: string }
   | { type: 'add_user', user: User }
   | { type: 'add_courses', courses: Course[] }
   | { type: 'add_assignments', assignments: Assignment[], time: number }
@@ -19,6 +20,8 @@ export type DataReducer = Reducer<State, Action>;
 
 export default function reducer(state: State, action: Action): State {
   switch (action.type) {
+    case 'add_url':
+      return { ...state, url: action.url };
     case 'add_user':
       return { ...state, user: action.user };
     case 'add_courses':

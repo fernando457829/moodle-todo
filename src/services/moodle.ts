@@ -2,7 +2,6 @@ import axios, { AxiosTransformer } from 'axios';
 import qs from 'qs';
 
 const api = axios.create({
-  baseURL: 'http://moodle.funecriacho.com.br',
   transformRequest: [
     (data) => qs.stringify(data),
     ...axios.defaults.transformRequest as AxiosTransformer[],
@@ -12,8 +11,8 @@ const api = axios.create({
 
 export default api;
 
-export async function authenticate(username: string, password: string) {
-  const { data } = await api.post('/login/token.php', {
+export async function authenticate(url: string, username: string, password: string) {
+  const { data } = await api.post(`${url}/login/token.php`, {
     service: 'moodle_mobile_app',
     username,
     password,
@@ -22,8 +21,8 @@ export async function authenticate(username: string, password: string) {
   return data;
 }
 
-export async function webservice(wstoken: string, wsfunction: string, args: any = {}) {
-  const { data } = await api.post('/webservice/rest/server.php', {
+export async function webservice(url: string, wstoken: string, wsfunction: string, args: any = {}) {
+  const { data } = await api.post(`${url}/webservice/rest/server.php`, {
     wstoken,
     wsfunction,
 

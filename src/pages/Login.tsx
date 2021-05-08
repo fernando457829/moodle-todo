@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   FormControl,
   Input,
@@ -31,7 +31,7 @@ const validationSchema = yup.object({
 });
 
 export default function Login() {
-  const { dispatch } = useData();
+  const { url, user, dispatch } = useData();
   const history = useHistory();
   const toast = useToast({
     position: 'bottom-right',
@@ -40,6 +40,15 @@ export default function Login() {
     duration: 5000,
     title: 'Ocorreu um erro.',
   });
+
+  useEffect(() => {
+    if (!url) {
+      history.push('/url');
+      return;
+    }
+
+    if (user) history.push('/');
+  }, []);
 
   return (
     <Container height="100vh" display="flex" justifyContent="center" alignItems="center">
@@ -51,7 +60,7 @@ export default function Login() {
         validationSchema={validationSchema}
         onSubmit={
           async ({ email, password }, { setSubmitting }) => {
-            const data = await authenticate(email, password);
+            const data = await authenticate(url!, email, password);
 
             if (data.error) {
               toast({ description: data.error });
@@ -59,7 +68,7 @@ export default function Login() {
               return;
             }
 
-            const info = await webservice(data.token, 'core_webservice_get_site_info');
+            const info = await webservice(url!, data.token, 'core_webservice_get_site_info');
 
             if (info.error) {
               toast({ description: info.error });

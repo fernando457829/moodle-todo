@@ -17,6 +17,7 @@ import useData from '../hooks/useData';
 
 export default function Home() {
   const {
+    url,
     user,
     courses,
     assignments,
@@ -27,6 +28,11 @@ export default function Home() {
   const [loading, toggleLoading] = useToggle(true);
 
   useEffect(() => {
+    if (!url) {
+      history.push('/url');
+      return;
+    }
+
     if (!user) {
       history.push('/login');
       return;
@@ -34,6 +40,7 @@ export default function Home() {
 
     async function addCourses() {
       const rawCourses = await webservice(
+        url!,
         user!.token,
         'core_enrol_get_users_courses',
         {
@@ -65,6 +72,7 @@ export default function Home() {
 
     async function updateAssignments() {
       const { events } = await webservice(
+        url!,
         user!.token,
         'core_calendar_get_calendar_events',
         {
