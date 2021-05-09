@@ -3,7 +3,7 @@ import { render } from 'react-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import Router from './Router';
-import createDataReducer from './hooks/createDataReducer';
+import createDataReducer from './creators/createDataReducer';
 import { DataProvider } from './contexts/DataContext';
 
 const mainElement = document.createElement('div');
