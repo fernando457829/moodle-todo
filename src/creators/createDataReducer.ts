@@ -1,8 +1,9 @@
 import { useCallback, useReducer } from 'react';
 import { useLocalStorage } from 'react-use';
+
 import reducer, { DataReducer, State } from '../reducers/data';
 
-export default function useDataReducer() {
+export default function createDataReducer() {
   const [data, saveData] = useLocalStorage<State>('data');
 
   const persistReducer = useCallback<DataReducer>((state, action) => {
