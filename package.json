@@ -23,6 +23,7 @@
     "@babel/runtime": "^7.14.0",
     "@chakra-ui/icons": "^1.0.12",
     "@chakra-ui/react": "^1.6.0",
+    "@chakra-ui/system": "^1.6.5",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "axios": "^0.21.1",

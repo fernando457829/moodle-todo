@@ -5,6 +5,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import Router from './Router';
 import createDataReducer from './creators/createDataReducer';
 import { DataProvider } from './contexts/DataContext';
+import theme from './styles/theme';
 
 const mainElement = document.createElement('div');
 mainElement.setAttribute('id', 'root');
@@ -15,7 +16,7 @@ function App() {
   const [state, dispatch] = createDataReducer();
 
   return (
-    <ChakraProvider>
+    <ChakraProvider theme={theme}>
       <DataProvider value={{ state, dispatch }}>
         <Router />
       </DataProvider>
