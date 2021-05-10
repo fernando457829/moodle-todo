@@ -50,6 +50,7 @@
     "@typescript-eslint/eslint-plugin": "^4.4.1",
     "@typescript-eslint/parser": "^4.22.0",
     "babel-loader": "^8.1.0",
+    "copy-webpack-plugin": "6",
     "cross-env": "^7.0.2",
     "electron": "^8.2.2",
     "electron-builder": "^22.7.0",
