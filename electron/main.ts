@@ -48,7 +48,7 @@ class Application {
       },
     });
 
-    this.window.setMenu(null);
+    // this.window.setMenu(null);
     this.window.setMenuBarVisibility(false);
 
     if (process.env.NODE_ENV === 'development') this.window.loadURL('http://localhost:4000');
