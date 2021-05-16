@@ -17,7 +17,7 @@ import {
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
 
-import { ChevronRightIcon } from '@chakra-ui/icons';
+import { FaChevronRight } from 'react-icons/fa';
 import api from '../services/moodle';
 import useData from '../hooks/useData';
 
@@ -81,7 +81,7 @@ export default function Url() {
             <Button
               isLoading={isSubmitting}
               type="submit"
-              rightIcon={<ChevronRightIcon />}
+              rightIcon={<FaChevronRight />}
             >
               Entrar
             </Button>

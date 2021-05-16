@@ -9,7 +9,7 @@ import {
   Spinner,
   Text,
 } from '@chakra-ui/react';
-import { CheckIcon } from '@chakra-ui/icons';
+import { FaCheck } from 'react-icons/fa';
 import { useHistory } from 'react-router-dom';
 
 import { webservice } from '../services/moodle';
@@ -136,7 +136,7 @@ export default function Home() {
             <Box display="flex" justifyContent="space-between" flexDirection="row">
               <Heading size="md">{name}</Heading>
               <Button colorScheme="green" onClick={() => handleDone(id)}>
-                <CheckIcon />
+                <FaCheck />
               </Button>
             </Box>
             <Text>{courses!.find((course) => course.id === courseid)!.name}</Text>
