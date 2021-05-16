@@ -10,8 +10,8 @@ export type Action =
   | { type: 'add_url', url: string }
   | { type: 'add_user', user: User }
   | { type: 'add_courses', courses: Course[] }
-  | { type: 'add_assignments', assignments: Assignment[], time: number }
-  | { type: 'update_assignments', assignments: Assignment[], time: number }
+  | { type: 'add_assignments', assignments: Assignment[] }
+  | { type: 'update_assignments', assignments: Assignment[] }
   | { type: 'done_assignment', id: number };
 
 export type State = Partial<Data>;
@@ -27,7 +27,7 @@ export default function reducer(state: State, action: Action): State {
     case 'add_courses':
       return { ...state, courses: action.courses };
     case 'add_assignments':
-      return { ...state, assignments: action.assignments, lastUpdate: action.time };
+      return { ...state, assignments: action.assignments };
     case 'update_assignments':
       return {
         ...state,
@@ -38,7 +38,6 @@ export default function reducer(state: State, action: Action): State {
           if (array.findIndex((value) => value.id === assignment.id) === -1) array.push(assignment);
           return array;
         }, [] as Assignment[]),
-        lastUpdate: action.time,
       };
     case 'done_assignment':
       return {

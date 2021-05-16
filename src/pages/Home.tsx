@@ -21,7 +21,6 @@ export default function Home() {
     user,
     courses,
     assignments,
-    lastUpdate,
     dispatch,
   } = useData();
   const history = useHistory();
@@ -58,16 +57,11 @@ export default function Home() {
   }, [user]);
 
   useEffect(() => {
-    const needUpdate = lastUpdate
-      && new Date().getTime() / 1000 - Number(lastUpdate) <= 24 * 60 * 60;
-
     if (!courses) return;
 
-    if (!needUpdate) {
-      if (lastUpdate) {
-        toggleLoading(false);
-        return;
-      }
+    if (assignments) {
+      toggleLoading(false);
+      return;
     }
 
     async function updateAssignments() {
@@ -97,16 +91,15 @@ export default function Home() {
         }));
 
       dispatch({
-        type: needUpdate ? 'update_assignments' : 'add_assignments',
+        type: 'add_assignments',
         assignments: newAssignments,
-        time: new Date().getTime() / 1000,
       });
 
       toggleLoading(false);
     }
 
     updateAssignments();
-  }, [user, courses, lastUpdate]);
+  }, [user, assignments, courses]);
 
   function handleDone(id: number) {
     dispatch({ type: 'done_assignment', id });

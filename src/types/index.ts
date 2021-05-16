@@ -17,7 +17,6 @@ export type Assignment = {
 
 export type Data = {
   url: string;
-  lastUpdate: number;
   user: User;
   courses: Course[];
   assignments: Assignment[];
