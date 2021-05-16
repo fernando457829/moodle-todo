@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 
 import { webservice } from '../services/moodle';
 import useData from '../hooks/useData';
+import Header from '../components/Header';
 
 export default function Home() {
   const {
@@ -114,8 +115,10 @@ export default function Home() {
   }
 
   return (
-    <Container>
-      {
+    <>
+      <Header />
+      <Container>
+        {
         assignments!.filter(({ done }) => !done).map(({ id, courseid, name }) => (
           <Box
             key={String(id)}
@@ -136,6 +139,7 @@ export default function Home() {
           </Box>
         ))
       }
-    </Container>
+      </Container>
+    </>
   );
 }
