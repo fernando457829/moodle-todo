@@ -7,6 +7,8 @@ import {
   FormErrorMessage,
   useToast,
   Container,
+  Heading,
+  Box,
 } from '@chakra-ui/react';
 import {
   Formik,
@@ -51,7 +53,14 @@ export default function Login() {
   }, []);
 
   return (
-    <Container height="100vh" display="flex" justifyContent="center" alignItems="center">
+    <Container
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Heading marginBottom="6">Entrar na sua conta</Heading>
       <Formik
         initialValues={{
           email: '',
@@ -91,10 +100,10 @@ export default function Login() {
         }
       >
         {({ isSubmitting, errors, touched }) => (
-          <Form>
+          <Box as={Form} width="100%" maxWidth="sm">
             <Field name="email">
               {({ field }: FieldProps) => (
-                <FormControl isInvalid={Boolean(errors.email && touched.email)}>
+                <FormControl isInvalid={Boolean(errors.email && touched.email)} marginBottom="4">
                   <FormLabel htmlFor="email">E-mail</FormLabel>
                   <Input {...field} id="email" placeholder="Seu e-mail" />
                   <FormErrorMessage>{errors.email}</FormErrorMessage>
@@ -110,13 +119,15 @@ export default function Login() {
                 </FormControl>
               )}
             </Field>
-            <Button
-              isLoading={isSubmitting}
-              type="submit"
-            >
-              Entrar
-            </Button>
-          </Form>
+            <Box marginTop="4" display="flex" justifyContent="flex-end">
+              <Button
+                isLoading={isSubmitting}
+                type="submit"
+              >
+                Entrar
+              </Button>
+            </Box>
+          </Box>
         )}
       </Formik>
     </Container>

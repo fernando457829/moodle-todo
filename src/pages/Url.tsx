@@ -1,10 +1,12 @@
 import React, { useEffect } from 'react';
 import {
+  Box,
   Button,
   Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Heading,
   Input,
   useToast,
 } from '@chakra-ui/react';
@@ -44,31 +46,38 @@ export default function Url() {
   }, []);
 
   return (
-    <Container height="100vh" display="flex" justifyContent="center" alignItems="center">
+    <Container
+      height="100vh"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Heading marginBottom="6">Conectar-se a uma escola</Heading>
       <Formik
         initialValues={{
           url: '',
         }}
         validationSchema={validationSchema}
         onSubmit={
-          (values, { setSubmitting }) => api.post(`${values.url}/login/token.php`)
-            .then(({ status }) => {
-              if (status !== 200) throw new Error();
+            (values, { setSubmitting }) => api.post(`${values.url}/login/token.php`)
+              .then(({ status }) => {
+                if (status !== 200) throw new Error();
 
-              dispatch({ type: 'add_url', url: values.url });
+                dispatch({ type: 'add_url', url: values.url });
 
-              setSubmitting(false);
+                setSubmitting(false);
 
-              history.push('/login');
-            })
-            .catch(() => {
-              toast({ description: 'Site inválido ou inexistente' });
-              setSubmitting(false);
-            })
-        }
+                history.push('/login');
+              })
+              .catch(() => {
+                toast({ description: 'Site inválido ou inexistente' });
+                setSubmitting(false);
+              })
+          }
       >
         {({ isSubmitting, errors, touched }) => (
-          <Form>
+          <Box as={Form} width="100%" maxWidth="sm">
             <Field name="url">
               {({ field }: FieldProps) => (
                 <FormControl isInvalid={Boolean(errors.url && touched.url)}>
@@ -78,14 +87,16 @@ export default function Url() {
                 </FormControl>
               )}
             </Field>
-            <Button
-              isLoading={isSubmitting}
-              type="submit"
-              rightIcon={<FaChevronRight />}
-            >
-              Entrar
-            </Button>
-          </Form>
+            <Box marginTop="4" display="flex" justifyContent="flex-end">
+              <Button
+                isLoading={isSubmitting}
+                type="submit"
+                rightIcon={<FaChevronRight />}
+              >
+                Entrar
+              </Button>
+            </Box>
+          </Box>
         )}
       </Formik>
     </Container>
