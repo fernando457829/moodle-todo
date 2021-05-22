@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { FaCheck } from 'react-icons/fa';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 
 import { webservice } from '../services/moodle';
 import useData from '../hooks/useData';
@@ -130,7 +130,9 @@ export default function Home() {
             padding="10px"
           >
             <Box display="flex" justifyContent="space-between" flexDirection="row">
-              <Heading size="md">{name}</Heading>
+              <Link to={`/assignment/${id}`}>
+                <Heading size="md">{name}</Heading>
+              </Link>
               <Button colorScheme="green" onClick={() => handleDone(id)}>
                 <FaCheck />
               </Button>
