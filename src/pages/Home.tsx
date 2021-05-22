@@ -84,8 +84,8 @@ export default function Home() {
 
       const newAssignments = events
         .filter((event) => event.modulename === 'assign')
-        .map(({ id, courseid, name }) => ({
-          id,
+        .map(({ instance, courseid, name }) => ({
+          id: instance,
           courseid,
           name,
           done: false,
