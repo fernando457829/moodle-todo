@@ -66,28 +66,35 @@ export default function Home() {
     }
 
     async function updateAssignments() {
-      const { events } = await webservice(
+      const data = await webservice(
         url!,
         user!.token,
-        'core_calendar_get_calendar_events',
+        'mod_assign_get_assignments',
         {
-          events: {
-            courseids: courses!.map((course) => course.id),
-          },
-
-          options: {
-            siteevents: 0,
-            timestart: Math.floor(new Date().getTime() / 1000),
-          },
+          courseids: courses!.map((course) => course.id),
         },
-      ) as { events: any[] };
+      ) as { courses: any[] };
 
-      const newAssignments = events
-        .filter((event) => event.modulename === 'assign')
-        .map(({ instance, courseid, name }) => ({
-          id: instance,
-          courseid,
+      const currentTime = new Date().getTime() / 1000;
+
+      const newAssignments = data.courses
+        .reduce<any[]>((array, course) => [...array, ...course.assignments], [])
+        .filter(({ duedate }) => duedate >= currentTime)
+        .map(({
+          id,
+          course,
           name,
+          intro,
+          attachments,
+          duedate,
+        }) => ({
+          id,
+          courseid: course,
+          name,
+          description: intro,
+          attachments: (attachments as any[])
+            ?.map(({ filename, fileurl, mimetype }) => ({ filename, fileurl, mimetype })),
+          duedate,
           done: false,
         }));
 

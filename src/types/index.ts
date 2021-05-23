@@ -8,10 +8,19 @@ export type Course = {
   name: string;
 };
 
+export type Attachment = {
+  filename: string;
+  fileurl: string;
+  mimetype: string;
+};
+
 export type Assignment = {
   id: number;
   courseid: number;
   name: string;
+  description: string;
+  attachments: Attachment[] | undefined;
+  duedate: number;
   done: boolean;
 };
 
