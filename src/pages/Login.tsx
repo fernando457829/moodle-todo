@@ -9,6 +9,9 @@ import {
   Container,
   Heading,
   Box,
+  InputRightElement,
+  IconButton,
+  InputGroup,
 } from '@chakra-ui/react';
 import {
   Formik,
@@ -18,6 +21,8 @@ import {
 } from 'formik';
 import * as yup from 'yup';
 import { useHistory } from 'react-router-dom';
+import { useToggle } from 'react-use';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { authenticate, webservice } from '../services/moodle';
 import useData from '../hooks/useData';
@@ -42,6 +47,7 @@ export default function Login() {
     duration: 5000,
     title: 'Ocorreu um erro.',
   });
+  const [showPassword, toggleShowPassword] = useToggle(false);
 
   useEffect(() => {
     if (!url) {
@@ -114,7 +120,23 @@ export default function Login() {
               {({ field }: FieldProps) => (
                 <FormControl isInvalid={Boolean(errors.password && touched.password)}>
                   <FormLabel htmlFor="password">Senha</FormLabel>
-                  <Input {...field} type="password" id="password" placeholder="Sua senha" />
+                  <InputGroup>
+                    <Input
+                      {...field}
+                      type={showPassword ? 'text' : 'password'}
+                      id="password"
+                      placeholder="Sua senha"
+                    />
+                    <InputRightElement>
+                      <IconButton
+                        aria-label={showPassword ? 'esconder' : 'mostrar'}
+                        onClick={toggleShowPassword}
+                        variant="ghost"
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </IconButton>
+                    </InputRightElement>
+                  </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
               )}
