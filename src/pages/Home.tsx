@@ -85,14 +85,14 @@ export default function Home() {
           course,
           name,
           intro,
-          attachments,
+          introattachments,
           duedate,
         }) => ({
           id,
           courseid: course,
           name,
           description: intro,
-          attachments: (attachments as any[])
+          attachments: (introattachments as any[])
             ?.map(({ filename, fileurl, mimetype }) => ({ filename, fileurl, mimetype })),
           duedate,
           done: false,
