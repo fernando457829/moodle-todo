@@ -20,7 +20,7 @@ import {
 } from 'react-icons/fa';
 
 import useData from '../hooks/useData';
-import { Assignment as AssignmentType, Course } from '../types';
+import { Assignment as AssignmentType, Course, Submission } from '../types';
 import { webservice } from '../services/moodle';
 
 export default function Assignment() {
@@ -34,7 +34,7 @@ export default function Assignment() {
   } = useData();
   const [assignment, setAssignment] = useState<AssignmentType>();
   const [course, setCourse] = useState<Course>();
-  const [submission, setSubmission] = useState<any>();
+  const [submission, setSubmission] = useState<Submission>();
 
   useEffect(() => {
     if (!assignment && !course) {
@@ -63,8 +63,22 @@ export default function Assignment() {
         {
           assignid: findedAssignment.id,
         },
-      ).then(({ lastattempt }) => {
-        setSubmission(lastattempt);
+      ).then(({ lastattempt, ...rest }) => {
+        console.log(lastattempt, rest);
+
+        setSubmission({
+          status: lastattempt.submission.status,
+          plugins: (lastattempt.submission.plugins as any[])?.map((plugin) => ({
+            type: plugin.type,
+            name: plugin.name,
+            text: plugin.editorfields?.[0].text,
+            files: (plugin.fileareas?.[0].files as any[])?.map((attachment) => ({
+              filename: attachment.filename,
+              fileurl: attachment.fileurl,
+              mimetype: attachment.mimetype,
+            })),
+          })),
+        });
       });
     }
   }, [assignments, courses]);
@@ -105,6 +119,53 @@ export default function Assignment() {
               })()
             }
             <Link href={attachment.fileurl}>{attachment.filename}</Link>
+          </Box>
+        ))
+      }
+      <Text>
+        Status:
+        {' '}
+        {submission.status}
+      </Text>
+      {
+        submission.plugins?.map((plugin) => (
+          <Box key={plugin.name}>
+            <Text>
+              {plugin.name}
+              {' '}
+              -
+              {' '}
+              {plugin.type}
+            </Text>
+            {
+              plugin.text
+                && <div dangerouslySetInnerHTML={{ __html: sanitize(plugin.text) }} />
+            }
+            {
+              plugin.files?.map((file) => (
+                <Box key={file.fileurl} display="flex" flexDirection="row">
+                  {
+                    (() => {
+                      switch (file.mimetype) {
+                        case 'application/pdf':
+                          return <FaFilePdf />;
+                        case 'application/msword':
+                        case 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+                          return <FaFileWord />;
+                        case 'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                          return <FaFilePowerpoint />;
+                        case 'image/jpeg':
+                        case 'image/png':
+                          return <FaFileImage />;
+                        default:
+                          return <FaFile />;
+                      }
+                    })()
+                  }
+                  <Link href={file.fileurl}>{file.filename}</Link>
+                </Box>
+              ))
+            }
           </Box>
         ))
       }

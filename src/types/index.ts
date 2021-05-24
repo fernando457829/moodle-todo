@@ -19,7 +19,7 @@ export type Assignment = {
   courseid: number;
   name: string;
   description: string;
-  attachments: Attachment[] | undefined;
+  attachments?: Attachment[];
   duedate: number;
   done: boolean;
 };
@@ -29,4 +29,16 @@ export type Data = {
   user: User;
   courses: Course[];
   assignments: Assignment[];
+};
+
+export type Plugin = {
+  type: 'file' | 'onlinetext' | 'comments';
+  name: string;
+  text?: string;
+  files?: Attachment[];
+};
+
+export type Submission = {
+  status: 'submitted' | 'new';
+  plugins: Plugin[];
 };
