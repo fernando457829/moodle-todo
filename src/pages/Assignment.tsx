@@ -2,8 +2,13 @@
 import React, { useEffect, useState } from 'react';
 import {
   Box,
+  Button,
   Center,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Heading,
+  Input,
   Link,
   Spinner,
   Text,
@@ -18,10 +23,18 @@ import {
   FaFilePowerpoint,
   FaFileImage,
 } from 'react-icons/fa';
+import * as yup from 'yup';
+import { Form, Formik } from 'formik';
 
 import useData from '../hooks/useData';
 import { Assignment as AssignmentType, Course, Submission } from '../types';
-import { webservice } from '../services/moodle';
+import { upload, webservice } from '../services/moodle';
+
+const validationSchema = yup.object({
+  file: yup.mixed()
+    .test('size', 'O arquivo é muito grande. Máximo: 2MB', (value) => (value?.size || 0) <= 2000000)
+    .required('É necessário um arquivo'),
+});
 
 export default function Assignment() {
   const history = useHistory();
@@ -63,9 +76,7 @@ export default function Assignment() {
         {
           assignid: findedAssignment.id,
         },
-      ).then(({ lastattempt, ...rest }) => {
-        console.log(lastattempt, rest);
-
+      ).then(({ lastattempt }) => {
         setSubmission({
           status: lastattempt.submission.status,
           plugins: (lastattempt.submission.plugins as any[])?.map((plugin) => ({
@@ -169,6 +180,54 @@ export default function Assignment() {
           </Box>
         ))
       }
+      <Formik
+        initialValues={{
+          file: {} as any,
+        } as { file: File }}
+        validationSchema={validationSchema}
+        onSubmit={
+            async ({ file }, { setSubmitting }) => {
+              const data = await upload(url!, user!.token, file);
+
+              await webservice(
+                url!,
+                user!.token,
+                'mod_assign_save_submission',
+                {
+                  assignmentid: assignment.id,
+                  plugindata: {
+                    files_filemanager: data[0].itemid,
+                  },
+                },
+              );
+
+              setSubmitting(false);
+            }
+        }
+      >
+        {({
+          isSubmitting,
+          errors,
+          touched,
+          setFieldValue,
+        }) => (
+          <Box as={Form} width="100%" maxWidth="sm">
+            <FormControl isInvalid={Boolean(errors.file && touched.file)}>
+              <FormLabel htmlFor="file">Enviar arquivo</FormLabel>
+              <Input
+                onChange={(event) => setFieldValue('file', event.currentTarget.files?.[0])}
+                name="file"
+                type="file"
+                id="file"
+              />
+              <FormErrorMessage>{errors.file}</FormErrorMessage>
+            </FormControl>
+            <Button isLoading={isSubmitting} type="submit">
+              Enviar
+            </Button>
+          </Box>
+        )}
+      </Formik>
     </Box>
   );
 }
