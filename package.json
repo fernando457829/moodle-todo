@@ -14,8 +14,8 @@
     "start:electron": "electron .",
     "build": "npm-run-all build:electron build:react",
     "build:run": "npm-run-all build start:electron",
-    "build:electron": "webpack --config webpack/electron.webpack.js",
-    "build:react": "webpack --config webpack/react.webpack.js",
+    "build:electron": "webpack --config webpack/electron.webpack.js --mode production",
+    "build:react": "webpack --config webpack/react.webpack.js --mode production",
     "package": "npm-run-all build package:dist",
     "package:dist": "electron-builder --dir"
   },
