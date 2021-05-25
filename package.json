@@ -17,7 +17,7 @@
     "build:electron": "webpack --config webpack/electron.webpack.js --mode production",
     "build:react": "webpack --config webpack/react.webpack.js --mode production",
     "package": "npm-run-all build package:dist",
-    "package:dist": "electron-builder --dir"
+    "package:dist": "electron-builder --publish never"
   },
   "dependencies": {
     "@babel/runtime": "^7.14.0",
@@ -76,6 +76,9 @@
     "appId": "com.fernando.moodle-todo",
     "mac": {
       "category": "public.app-category.video"
+    },
+    "win": {
+      "target": "nsis"
     },
     "directories": {
       "output": "packages"
