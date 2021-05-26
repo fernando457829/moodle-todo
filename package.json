@@ -35,6 +35,9 @@
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-use": "^17.2.4",
+    "slate": "^0.63.0",
+    "slate-history": "^0.62.0",
+    "slate-react": "^0.63.0",
     "yup": "^0.32.9"
   },
   "devDependencies": {

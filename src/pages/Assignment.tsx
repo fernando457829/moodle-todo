@@ -1,5 +1,5 @@
 /* eslint-disable react/no-danger */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -25,6 +25,9 @@ import {
 } from 'react-icons/fa';
 import * as yup from 'yup';
 import { Form, Formik } from 'formik';
+import { createEditor } from 'slate';
+import { Editable, Slate, withReact } from 'slate-react';
+import { withHistory } from 'slate-history';
 
 import useData from '../hooks/useData';
 import { Assignment as AssignmentType, Course, Submission } from '../types';
@@ -32,8 +35,7 @@ import { upload, webservice } from '../services/moodle';
 
 const validationSchema = yup.object({
   file: yup.mixed()
-    .test('size', 'O arquivo é muito grande. Máximo: 2MB', (value) => (value?.size || 0) <= 2000000)
-    .required('É necessário um arquivo'),
+    .test('size', 'O arquivo é muito grande. Máximo: 2MB', (value) => (value?.size || 0) <= 2000000),
 });
 
 export default function Assignment() {
@@ -48,6 +50,7 @@ export default function Assignment() {
   const [assignment, setAssignment] = useState<AssignmentType>();
   const [course, setCourse] = useState<Course>();
   const [submission, setSubmission] = useState<Submission>();
+  const editor = useMemo(() => withHistory(withReact(createEditor())), []);
 
   useEffect(() => {
     if (!assignment && !course) {
@@ -182,24 +185,48 @@ export default function Assignment() {
       }
       <Formik
         initialValues={{
-          file: {} as any,
-        } as { file: File }}
+          file: undefined,
+          text: [
+            {
+              type: 'paragraph',
+              children: [{ text: '' }],
+            },
+          ],
+        } as { file?: File, text: any[] }}
         validationSchema={validationSchema}
         onSubmit={
-            async ({ file }, { setSubmitting }) => {
-              const data = await upload(url!, user!.token, file);
+            async ({ file, text }, { setSubmitting }) => {
+              if (file) {
+                const data = await upload(url!, user!.token, file);
 
-              await webservice(
-                url!,
-                user!.token,
-                'mod_assign_save_submission',
-                {
-                  assignmentid: assignment.id,
-                  plugindata: {
-                    files_filemanager: data[0].itemid,
+                await webservice(
+                  url!,
+                  user!.token,
+                  'mod_assign_save_submission',
+                  {
+                    assignmentid: assignment.id,
+                    plugindata: {
+                      files_filemanager: data[0].itemid,
+                    },
                   },
-                },
-              );
+                );
+              } else {
+                await webservice(
+                  url!,
+                  user!.token,
+                  'mod_assign_save_submission',
+                  {
+                    assignmentid: assignment.id,
+                    plugindata: {
+                      onlinetext_editor: {
+                        text: text.map(({ children }) => `<p>${children.join('')}</p>`).join('<br>'),
+                        format: 1,
+                        itemid: 0,
+                      },
+                    },
+                  },
+                );
+              }
 
               setSubmitting(false);
             }
@@ -209,6 +236,7 @@ export default function Assignment() {
           isSubmitting,
           errors,
           touched,
+          values,
           setFieldValue,
         }) => (
           <Box as={Form} width="100%" maxWidth="sm">
@@ -221,6 +249,16 @@ export default function Assignment() {
                 id="file"
               />
               <FormErrorMessage>{errors.file}</FormErrorMessage>
+            </FormControl>
+            <FormControl isInvalid={Boolean(errors.file && touched.file)}>
+              <FormLabel>Texto online</FormLabel>
+              <Slate
+                editor={editor}
+                value={values.text}
+                onChange={(value) => setFieldValue('text', value)}
+              >
+                <Editable id="text" name="text" />
+              </Slate>
             </FormControl>
             <Button isLoading={isSubmitting} type="submit">
               Enviar
