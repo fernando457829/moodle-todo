@@ -1,43 +1,44 @@
 import React from 'react';
 import {
+  Box,
   Container,
   IconButton,
   Text,
   useColorMode,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import { FaMoon, FaSun, FaSyncAlt } from 'react-icons/fa';
 
 export default function Header() {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const { toggleColorMode } = useColorMode();
+  const SwitchIcon = useColorModeValue(FaMoon, FaSun);
 
   return (
     <Container
-      width="100%"
+      maxWidth="container.xl"
       height="50px"
       display="flex"
       justifyContent="space-between"
       alignItems="center"
     >
-      <Container>
+      <Box>
         <Text>
           Moodle TODO
         </Text>
-      </Container>
-      <Container>
+      </Box>
+      <Box>
         <IconButton
           variant="ghost"
           aria-label="Atualizar"
-        >
-          <FaSyncAlt />
-        </IconButton>
+          icon={<FaSyncAlt />}
+        />
         <IconButton
           variant="ghost"
           aria-label="Mudar o tema"
           onClick={() => toggleColorMode()}
-        >
-          {colorMode === 'dark' ? <FaSun /> : <FaMoon />}
-        </IconButton>
-      </Container>
+          icon={<SwitchIcon />}
+        />
+      </Box>
     </Container>
   );
 }

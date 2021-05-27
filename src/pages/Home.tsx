@@ -124,7 +124,7 @@ export default function Home() {
   return (
     <>
       <Header />
-      <Container>
+      <Container maxWidth="container.xl">
         {
         assignments!.filter(({ done }) => !done).map(({ id, courseid, name }) => (
           <Box

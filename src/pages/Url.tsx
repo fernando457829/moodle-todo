@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import {
   Box,
   Button,
-  Container,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -46,7 +45,7 @@ export default function Url() {
   }, []);
 
   return (
-    <Container
+    <Box
       height="100vh"
       display="flex"
       flexDirection="column"
@@ -99,6 +98,6 @@ export default function Url() {
           </Box>
         )}
       </Formik>
-    </Container>
+    </Box>
   );
 }

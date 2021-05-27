@@ -6,7 +6,6 @@ import {
   FormLabel,
   FormErrorMessage,
   useToast,
-  Container,
   Heading,
   Box,
   InputRightElement,
@@ -59,7 +58,7 @@ export default function Login() {
   }, []);
 
   return (
-    <Container
+    <Box
       height="100vh"
       display="flex"
       flexDirection="column"
@@ -132,9 +131,8 @@ export default function Login() {
                         aria-label={showPassword ? 'esconder' : 'mostrar'}
                         onClick={toggleShowPassword}
                         variant="ghost"
-                      >
-                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                      </IconButton>
+                        icon={showPassword ? <FaEyeSlash /> : <FaEye />}
+                      />
                     </InputRightElement>
                   </InputGroup>
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
@@ -152,6 +150,6 @@ export default function Login() {
           </Box>
         )}
       </Formik>
-    </Container>
+    </Box>
   );
 }
