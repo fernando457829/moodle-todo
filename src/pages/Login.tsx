@@ -59,7 +59,7 @@ export default function Login() {
 
   return (
     <Box
-      height="100vh"
+      height="full"
       display="flex"
       flexDirection="column"
       justifyContent="center"

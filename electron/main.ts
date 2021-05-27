@@ -1,5 +1,6 @@
 import {
   app,
+  ipcMain,
   BrowserWindow,
   Tray,
   Menu,
@@ -43,6 +44,7 @@ class Application {
     this.window = new BrowserWindow({
       width: 1100,
       height: 700,
+      frame: false,
       webPreferences: {
         nodeIntegration: true,
       },
@@ -81,6 +83,15 @@ class Application {
       });
 
     app.allowRendererProcessReuse = true;
+
+    ipcMain.handle('window-minimize', () => this.window!.minimize());
+
+    ipcMain.handle('window-maximize', () => {
+      if (this.window!.isMaximized()) this.window!.restore();
+      else if (this.window!.isMaximizable()) this.window!.maximize();
+    });
+
+    ipcMain.handle('window-close', () => this.window!.close());
   }
 
   quit() {

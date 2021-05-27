@@ -126,28 +126,28 @@ export default function Home() {
       <Header />
       <Container maxWidth="container.xl">
         {
-        assignments!.filter(({ done }) => !done).map(({ id, courseid, name }) => (
-          <Box
-            key={String(id)}
-            maxW="sm"
-            border="1px"
-            borderColor="blackAlpha.700"
-            borderRadius="10px"
-            marginBottom="20px"
-            padding="10px"
-          >
-            <Box display="flex" justifyContent="space-between" flexDirection="row">
-              <Link to={`/assignment/${id}`}>
-                <Heading size="md">{name}</Heading>
-              </Link>
-              <Button colorScheme="green" onClick={() => handleDone(id)}>
-                <FaCheck />
-              </Button>
+          assignments!.filter(({ done }) => !done).map(({ id, courseid, name }) => (
+            <Box
+              key={String(id)}
+              maxWidth="sm"
+              border="1px"
+              borderColor="blackAlpha.700"
+              borderRadius="10px"
+              marginBottom="20px"
+              padding="10px"
+            >
+              <Box display="flex" justifyContent="space-between" flexDirection="row">
+                <Link to={`/assignment/${id}`}>
+                  <Heading size="md">{name}</Heading>
+                </Link>
+                <Button colorScheme="green" onClick={() => handleDone(id)}>
+                  <FaCheck />
+                </Button>
+              </Box>
+              <Text>{courses!.find((course) => course.id === courseid)!.name}</Text>
             </Box>
-            <Text>{courses!.find((course) => course.id === courseid)!.name}</Text>
-          </Box>
-        ))
-      }
+          ))
+        }
       </Container>
     </>
   );

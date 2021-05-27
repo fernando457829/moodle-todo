@@ -46,7 +46,7 @@ export default function Url() {
 
   return (
     <Box
-      height="100vh"
+      height="full"
       display="flex"
       flexDirection="column"
       justifyContent="center"
