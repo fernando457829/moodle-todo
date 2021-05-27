@@ -6,7 +6,7 @@ import {
   VscChromeMinimize,
   VscChromeRestore,
 } from 'react-icons/vsc';
-import { ipcRenderer, remote } from 'electron';
+import { ipcRenderer } from 'electron';
 
 import useToggleValue from '../hooks/useToggleValue';
 import TitleBarButton from './TitleBarButton';
@@ -14,11 +14,7 @@ import TitleBarButton from './TitleBarButton';
 function TitleBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
   const buttonBackgroundColor = useColorModeValue('white', 'gray.800');
-  const [MiddleIcon, toggleIsMaximazed] = useToggleValue(
-    VscChromeRestore,
-    VscChromeMaximize,
-    remote.getCurrentWindow().isMaximized(),
-  );
+  const [MiddleIcon, toggleIsMaximazed] = useToggleValue(VscChromeRestore, VscChromeMaximize);
 
   useEffect(() => {
     function handleUnmaximize() {
@@ -29,12 +25,14 @@ function TitleBar() {
       toggleIsMaximazed(true);
     }
 
-    remote.getCurrentWindow().addListener('unmaximize', handleUnmaximize);
-    remote.getCurrentWindow().addListener('maximize', handleMaximize);
+    ipcRenderer.invoke('window-is-maximized').then((value: boolean) => toggleIsMaximazed(value));
+
+    ipcRenderer.addListener('unmaximize', handleUnmaximize);
+    ipcRenderer.addListener('maximize', handleMaximize);
 
     return () => {
-      remote.getCurrentWindow().removeListener('unmaximize', handleUnmaximize);
-      remote.getCurrentWindow().removeListener('maximize', handleMaximize);
+      ipcRenderer.removeListener('unmaximize', handleUnmaximize);
+      ipcRenderer.removeListener('maximize', handleMaximize);
     };
   }, []);
 

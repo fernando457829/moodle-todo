@@ -1,5 +1,4 @@
 import React from 'react';
-import { render } from 'react-dom';
 import { ChakraProvider } from '@chakra-ui/react';
 
 import Router from './Router';
@@ -10,12 +9,7 @@ import TitleBar from './components/TitleBar';
 import Fonts from './components/Fonts';
 import Scrollbar from './components/Scrollbar';
 
-const mainElement = document.createElement('div');
-mainElement.setAttribute('id', 'root');
-
-document.body.appendChild(mainElement);
-
-function App() {
+export default function App() {
   const [state, dispatch] = createDataReducer();
 
   return (
@@ -30,5 +24,3 @@ function App() {
     </ChakraProvider>
   );
 }
-
-render(<App />, mainElement);
