@@ -1,7 +1,3 @@
-/**
- * Build config for electron renderer process
- */
-
 import path from 'path';
 import webpack from 'webpack';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
@@ -47,7 +43,6 @@ export default merge(baseConfig, {
           {
             loader: MiniCssExtractPlugin.loader,
             options: {
-              // `./dist` can't be inerhited for publicPath for styles. Otherwise generated paths will be ./dist/dist
               publicPath: './',
             },
           },
@@ -55,7 +50,6 @@ export default merge(baseConfig, {
           'sass-loader'
         ],
       },
-      // WOFF Font
       {
         test: /\.woff(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -66,7 +60,6 @@ export default merge(baseConfig, {
           },
         },
       },
-      // WOFF2 Font
       {
         test: /\.woff2(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -77,7 +70,6 @@ export default merge(baseConfig, {
           },
         },
       },
-      // OTF Font
       {
         test: /\.otf(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -88,7 +80,6 @@ export default merge(baseConfig, {
           },
         },
       },
-      // TTF Font
       {
         test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -99,12 +90,10 @@ export default merge(baseConfig, {
           },
         },
       },
-      // EOT Font
       {
         test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
         use: 'file-loader',
       },
-      // SVG Font
       {
         test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
         use: {
@@ -115,7 +104,6 @@ export default merge(baseConfig, {
           },
         },
       },
-      // Common Image Formats
       {
         test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
         use: 'url-loader',
@@ -135,15 +123,6 @@ export default merge(baseConfig, {
   },
 
   plugins: [
-    /**
-     * Create global constants which can be configured at compile time.
-     *
-     * Useful for allowing different behaviour between development builds and
-     * release builds
-     *
-     * NODE_ENV should be production so that modules do not perform certain
-     * development checks
-     */
     new webpack.EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
