@@ -1,43 +1,42 @@
-import React, { ReactNode } from 'react';
-import { Box, useColorModeValue } from '@chakra-ui/react';
+import React from 'react';
+import { Box, BoxProps, useColorModeValue } from '@chakra-ui/react';
 
-export type ScrollbarProps = {
-  children: ReactNode;
-  height?: string;
-  width?: string;
-  background?: string;
-  thumbBackground?: string;
+export type ScrollbarProps = BoxProps & {
+  scrollbarColor?: BoxProps['color'];
 };
 
-export default function Scrollbar({
-  height,
-  width,
-  children,
-  background: customBackground,
-  thumbBackground: customThumbBackground,
-}: ScrollbarProps) {
-  const background = customBackground || useColorModeValue('white', 'var(--chakra-colors-gray-800)');
-  const thumbBackground = customThumbBackground || useColorModeValue('var(--chakra-colors-gray-300)', '#FFFFFF16');
+export default function Scrollbar(props: ScrollbarProps) {
+  const {
+    background,
+    backgroundColor,
+    scrollbarColor,
+    sx,
+  } = props;
+
+  const scrollbarBackground = background || backgroundColor || useColorModeValue('white', 'gray.800');
+  const scrollbarThumbBackground = scrollbarColor || useColorModeValue('gray.300', 'gray.700');
 
   return (
     <Box
+      {...props}
       overflowX="hidden"
       overflowY="auto"
-      width={width}
-      height={height}
-      css={{
+      background=""
+      sx={{
+        ...sx,
+
         '::-webkit-scrollbar': {
-          background,
+          background: scrollbarBackground,
           width: '1rem',
         },
 
         '::-webkit-scrollbar-thumb': {
-          border: `solid 4px ${background}`,
-          background: thumbBackground,
+          borderStyle: 'solid',
+          borderWidth: '0.25rem',
+          borderColor: scrollbarBackground,
+          background: scrollbarThumbBackground,
         },
       }}
-    >
-      {children}
-    </Box>
+    />
   );
 }
