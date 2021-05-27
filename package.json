@@ -35,6 +35,7 @@
     "@chakra-ui/system": "^1.6.5",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
+    "@fontsource/open-sans": "^4.4.0",
     "axios": "^0.21.1",
     "dompurify": "^2.2.8",
     "electron-debug": "^3.1.0",
