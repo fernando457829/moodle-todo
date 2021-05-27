@@ -7,6 +7,7 @@ import createDataReducer from './creators/createDataReducer';
 import { DataProvider } from './contexts/DataContext';
 import theme from './styles/theme';
 import TitleBar from './components/TitleBar';
+import Fonts from './components/Fonts';
 
 const mainElement = document.createElement('div');
 mainElement.setAttribute('id', 'root');
@@ -18,6 +19,7 @@ function App() {
 
   return (
     <ChakraProvider theme={theme}>
+      <Fonts />
       <TitleBar />
       <Box height="calc(100vh - 1.5rem)" overflowX="hidden" overflowY="auto">
         <DataProvider value={{ state, dispatch }}>
