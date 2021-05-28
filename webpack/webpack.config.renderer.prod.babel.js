@@ -9,6 +9,7 @@ import TerserPlugin from 'terser-webpack-plugin';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
+import { srcPath } from './utils/paths';
 
 CheckNodeEnv('production');
 DeleteSourceMaps();
@@ -27,11 +28,11 @@ export default merge(baseConfig, {
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
-    path.join(__dirname, '../src/index.tsx'),
+    path.join(srcPath, 'index.tsx'),
   ],
 
   output: {
-    path: path.join(__dirname, '../src/dist'),
+    path: path.join(srcPath, 'dist'),
     publicPath: './dist/',
     filename: 'renderer.prod.js',
   },

@@ -5,6 +5,7 @@ import { merge } from 'webpack-merge';
 import baseConfig from './webpack.config.base';
 import { dependencies } from '../package.json';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
+import { dllPath, srcPath } from './utils/paths';
 
 CheckNodeEnv('development');
 
@@ -47,9 +48,9 @@ export default merge(baseConfig, {
     new webpack.LoaderOptionsPlugin({
       debug: true,
       options: {
-        context: path.join(__dirname, '../src'),
+        context: srcPath,
         output: {
-          path: path.join(__dirname, '../dll'),
+          path: dllPath,
         },
       },
     }),

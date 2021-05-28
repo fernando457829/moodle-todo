@@ -1,11 +1,12 @@
-import path from 'path';
 import fs from 'fs';
 import webpack from 'webpack';
 import chalk from 'chalk';
 import { merge } from 'webpack-merge';
+import path from 'path';
 import { spawn, execSync } from 'child_process';
 import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
+import { dllPath } from './utils/paths';
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 
@@ -15,13 +16,14 @@ if (process.env.NODE_ENV === 'production') {
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
-const dllDir = path.join(__dirname, '../dll');
-const manifest = path.resolve(dllDir, 'renderer.json');
+
+const manifestPath = path.join(dllPath, 'renderer.json');
+
 const requiredByDLLConfig = module.parent.filename.includes(
   'webpack.config.renderer.dev.dll',
 );
 
-if (!requiredByDLLConfig && !(fs.existsSync(dllDir) && fs.existsSync(manifest))) {
+if (!requiredByDLLConfig && !(fs.existsSync(dllPath) && fs.existsSync(manifestPath))) {
   console.log(
     chalk.black.bgYellow.bold(
       'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"',
@@ -202,8 +204,8 @@ export default merge(baseConfig, {
     requiredByDLLConfig
       ? null
       : new webpack.DllReferencePlugin({
-        context: path.join(__dirname, '../dll'),
-        manifest: require(manifest),
+        context: dllPath,
+        manifest: require(manifestPath),
         sourceType: 'var',
       }),
 

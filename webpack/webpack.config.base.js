@@ -1,7 +1,7 @@
-import path from 'path';
 import webpack from 'webpack';
 
 import { dependencies as externals } from '../src/package.json';
+import { srcPath } from './utils/paths';
 
 export default {
   externals: [...Object.keys(externals || {})],
@@ -22,13 +22,13 @@ export default {
   },
 
   output: {
-    path: path.join(__dirname, '../src'),
+    path: srcPath,
     libraryTarget: 'commonjs2',
   },
 
   resolve: {
     extensions: ['.js', '.jsx', '.json', '.ts', '.tsx'],
-    modules: [path.join(__dirname, '../src'), 'node_modules'],
+    modules: [srcPath, 'node_modules'],
   },
 
   plugins: [
