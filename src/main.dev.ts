@@ -1,5 +1,3 @@
-/* eslint-disable no-console, global-require */
-
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 

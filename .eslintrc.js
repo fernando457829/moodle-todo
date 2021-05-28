@@ -20,8 +20,21 @@ module.exports = {
         config: require.resolve('./webpack/webpack.config.eslint.js'),
       },
     },
-    'import/parsers': {
-      '@typescript-eslint/parser': ['.ts', '.tsx'],
-    },
   },
+  overrides: [
+    {
+      files: [
+        'webpack/**',
+        'scripts/**',
+        'babel.config.js',
+        'src/main.dev.ts',
+      ],
+      rules: {
+        'global-require': 'off',
+        'no-console': 'off',
+
+        'import/no-dynamic-require': 'off',
+      },
+    },
+  ],
 };

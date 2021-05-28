@@ -1,4 +1,3 @@
-/* eslint-disable global-require, import/no-dynamic-require */
 import path from 'path';
 import fs from 'fs';
 import webpack from 'webpack';
