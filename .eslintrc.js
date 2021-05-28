@@ -17,7 +17,7 @@ module.exports = {
     'import/resolver': {
       node: {},
       webpack: {
-        config: require.resolve('./.erb/configs/webpack.config.eslint.js'),
+        config: require.resolve('./webpack/webpack.config.eslint.js'),
       },
     },
     'import/parsers': {

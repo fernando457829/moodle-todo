@@ -1,12 +1,14 @@
+/* eslint-disable global-require, import/no-dynamic-require */
 import path from 'path';
 import fs from 'fs';
 import webpack from 'webpack';
 import chalk from 'chalk';
 import { merge } from 'webpack-merge';
 import { spawn, execSync } from 'child_process';
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
 if (process.env.NODE_ENV === 'production') {
   CheckNodeEnv('development');
@@ -17,14 +19,14 @@ const publicPath = `http://localhost:${port}/dist`;
 const dllDir = path.join(__dirname, '../dll');
 const manifest = path.resolve(dllDir, 'renderer.json');
 const requiredByDLLConfig = module.parent.filename.includes(
-  'webpack.config.renderer.dev.dll'
+  'webpack.config.renderer.dev.dll',
 );
 
 if (!requiredByDLLConfig && !(fs.existsSync(dllDir) && fs.existsSync(manifest))) {
   console.log(
     chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"'
-    )
+      'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"',
+    ),
   );
   execSync('yarn postinstall');
 }
@@ -39,7 +41,7 @@ export default merge(baseConfig, {
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
-    require.resolve('../../src/index.tsx'),
+    require.resolve('../src/index.tsx'),
   ],
 
   output: {
@@ -201,10 +203,10 @@ export default merge(baseConfig, {
     requiredByDLLConfig
       ? null
       : new webpack.DllReferencePlugin({
-          context: path.join(__dirname, '../dll'),
-          manifest: require(manifest),
-          sourceType: 'var',
-        }),
+        context: path.join(__dirname, '../dll'),
+        manifest: require(manifest),
+        sourceType: 'var',
+      }),
 
     new webpack.NoEmitOnErrorsPlugin(),
 
@@ -234,7 +236,7 @@ export default merge(baseConfig, {
     lazy: false,
     hot: true,
     headers: {
-      'Access-Control-Allow-Origin': '*'
+      'Access-Control-Allow-Origin': '*',
     },
     contentBase: path.join(__dirname, 'dist'),
     watchOptions: {
@@ -248,13 +250,13 @@ export default merge(baseConfig, {
     },
     before() {
       console.log('Starting Main Process...');
-        spawn('npm', ['run', 'start:main'], {
-          shell: true,
-          env: process.env,
-          stdio: 'inherit',
-        })
-          .on('close', (code) => process.exit(code))
-          .on('error', (spawnError) => console.error(spawnError));
+      spawn('npm', ['run', 'start:main'], {
+        shell: true,
+        env: process.env,
+        stdio: 'inherit',
+      })
+        .on('close', (code) => process.exit(code))
+        .on('error', (spawnError) => console.error(spawnError));
     },
   },
 });

@@ -3,6 +3,7 @@ import webpack from 'webpack';
 import { merge } from 'webpack-merge';
 import TerserPlugin from 'terser-webpack-plugin';
 import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+
 import baseConfig from './webpack.config.base';
 import CheckNodeEnv from '../scripts/CheckNodeEnv';
 import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
@@ -11,7 +12,7 @@ CheckNodeEnv('production');
 DeleteSourceMaps();
 
 const devtoolsConfig = process.env.DEBUG_PROD === 'true' ? {
-  devtool: 'source-map'
+  devtool: 'source-map',
 } : {};
 
 export default merge(baseConfig, {
@@ -24,7 +25,7 @@ export default merge(baseConfig, {
   entry: './src/main.dev.ts',
 
   output: {
-    path: path.join(__dirname, '../../'),
+    path: path.join(__dirname, '../'),
     filename: './src/main.prod.js',
   },
 
@@ -33,7 +34,7 @@ export default merge(baseConfig, {
       new TerserPlugin({
         parallel: true,
       }),
-    ]
+    ],
   },
 
   plugins: [
