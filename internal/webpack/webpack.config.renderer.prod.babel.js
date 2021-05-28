@@ -1,25 +1,21 @@
-import path from 'path';
-import webpack from 'webpack';
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
-import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
-import { merge } from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
+const { EnvironmentPlugin } = require('webpack');
+const path = require('path');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
+const { merge } = require('webpack-merge');
+const TerserPlugin = require('terser-webpack-plugin');
 
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../scripts/CheckNodeEnv';
-import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
-import { srcPath } from './utils/paths';
+const baseConfig = require('./webpack.config.base');
+const isNodeEnv = require('../utils/isNodeEnv');
+const deleteSourceMaps = require('../utils/deleteSourceMaps');
+const { srcPath } = require('../utils/paths');
 
-CheckNodeEnv('production');
-DeleteSourceMaps();
+isNodeEnv('production');
+deleteSourceMaps();
 
-const devtoolsConfig = process.env.DEBUG_PROD === 'true' ? {
-  devtool: 'source-map',
-} : {};
-
-export default merge(baseConfig, {
-  ...devtoolsConfig,
+module.exports = merge(baseConfig, {
+  devtool: process.env.DEBUG_PROD ? 'source-map' : undefined,
 
   mode: 'production',
 
@@ -125,7 +121,7 @@ export default merge(baseConfig, {
   },
 
   plugins: [
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
     }),

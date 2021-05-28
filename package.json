@@ -14,15 +14,15 @@
   "license": "MIT",
   "scripts": {
     "build": "concurrently \"yarn build:main\" \"yarn build:renderer\"",
-    "build:main": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.config.main.prod.babel.js",
-    "build:renderer": "cross-env NODE_ENV=production webpack --config ./webpack/webpack.config.renderer.prod.babel.js",
+    "build:main": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.main.prod.babel.js",
+    "build:renderer": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.renderer.prod.babel.js",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "package": "rm -rf src/dist && yarn build && electron-builder build --publish never",
-    "postinstall": "node -r @babel/register scripts/CheckNativeDep.js && electron-builder install-app-deps && yarn cross-env NODE_ENV=development webpack --config ./webpack/webpack.config.renderer.dev.dll.babel.js && opencollective-postinstall && yarn-deduplicate yarn.lock",
-    "start": "node -r @babel/register ./scripts/CheckPortInUse.js && yarn start:renderer",
-    "start:main": "cross-env NODE_ENV=development electron -r ./scripts/BabelRegister ./src/main.dev.ts",
-    "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./webpack/webpack.config.renderer.dev.babel.js",
+    "postinstall": "electron-builder install-app-deps && cross-env NODE_ENV=development webpack --config ./internal/webpack/webpack.config.renderer.dev.dll.babel.js && yarn-deduplicate yarn.lock",
+    "start": "node internal/scripts/checkPort.js && yarn start:renderer",
+    "start:main": "cross-env NODE_ENV=development electron -r ./internal/scripts/babelRegister ./src/main.dev.ts",
+    "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./internal/webpack/webpack.config.renderer.dev.babel.js",
     "test": "jest"
   },
   "devEngines": {
@@ -103,7 +103,6 @@
     "babel-plugin-dev-expression": "^0.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "browserslist-config-erb": "^0.0.1",
-    "chalk": "^4.1.0",
     "concurrently": "^5.3.0",
     "core-js": "^3.6.5",
     "cross-env": "^7.0.2",
@@ -171,7 +170,7 @@
       "main.prod.js.map",
       "package.json"
     ],
-    "afterSign": "./scripts/Notarize.js",
+    "afterSign": "./internal/scripts/notarize.js",
     "mac": {
       "target": [
         "dmg"

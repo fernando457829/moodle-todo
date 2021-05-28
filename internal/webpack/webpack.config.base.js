@@ -1,10 +1,10 @@
-import webpack from 'webpack';
+const { EnvironmentPlugin } = require('webpack');
 
-import { dependencies as externals } from '../src/package.json';
-import { srcPath } from './utils/paths';
+const { dependencies } = require('../../src/package.json');
+const { srcPath } = require('../utils/paths');
 
-export default {
-  externals: [...Object.keys(externals || {})],
+module.exports = {
+  externals: Object.keys(dependencies || {}),
 
   module: {
     rules: [
@@ -32,7 +32,7 @@ export default {
   },
 
   plugins: [
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'production',
     }),
   ],

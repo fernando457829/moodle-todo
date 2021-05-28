@@ -1,17 +1,15 @@
-import webpack from 'webpack';
-import path from 'path';
-import { merge } from 'webpack-merge';
+const webpack = require('webpack');
+const path = require('path');
+const { merge } = require('webpack-merge');
 
-import baseConfig from './webpack.config.base';
-import { dependencies } from '../package.json';
-import CheckNodeEnv from '../scripts/CheckNodeEnv';
-import { dllPath, srcPath } from './utils/paths';
+const baseConfig = require('./webpack.config.base');
+const { dependencies } = require('../../package.json');
+const { dllPath, srcPath } = require('../utils/paths');
+const isNodeEnv = require('../utils/isNodeEnv');
 
-CheckNodeEnv('development');
+isNodeEnv('development');
 
-const dist = path.join(__dirname, '../dll');
-
-export default merge(baseConfig, {
+module.exports = merge(baseConfig, {
   context: path.join(__dirname, '..'),
 
   devtool: 'eval',
@@ -22,7 +20,7 @@ export default merge(baseConfig, {
 
   externals: ['fsevents', 'crypto-browserify'],
 
-  module: require('./webpack.config.renderer.dev.babel').default.module,
+  module: require('./webpack.config.renderer.dev.babel').module,
 
   entry: {
     renderer: Object.keys(dependencies || {}),
@@ -30,14 +28,14 @@ export default merge(baseConfig, {
 
   output: {
     library: 'renderer',
-    path: dist,
+    path: dllPath,
     filename: '[name].dev.dll.js',
     libraryTarget: 'var',
   },
 
   plugins: [
     new webpack.DllPlugin({
-      path: path.join(dist, '[name].json'),
+      path: path.join(dllPath, '[name].json'),
       name: '[name]',
     }),
 

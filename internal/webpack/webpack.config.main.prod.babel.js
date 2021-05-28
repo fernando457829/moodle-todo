@@ -1,22 +1,18 @@
-import webpack from 'webpack';
-import { merge } from 'webpack-merge';
-import TerserPlugin from 'terser-webpack-plugin';
-import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
+const { EnvironmentPlugin } = require('webpack');
+const { merge } = require('webpack-merge');
+const TerserPlugin = require('terser-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../scripts/CheckNodeEnv';
-import DeleteSourceMaps from '../scripts/DeleteSourceMaps';
-import { rootPath } from './utils/paths';
+const baseConfig = require('./webpack.config.base');
+const isNodeEnv = require('../utils/isNodeEnv');
+const deleteSourceMaps = require('../utils/deleteSourceMaps');
+const { rootPath } = require('../utils/paths');
 
-CheckNodeEnv('production');
-DeleteSourceMaps();
+isNodeEnv('production');
+deleteSourceMaps();
 
-const devtoolsConfig = process.env.DEBUG_PROD === 'true' ? {
-  devtool: 'source-map',
-} : {};
-
-export default merge(baseConfig, {
-  ...devtoolsConfig,
+module.exports = merge(baseConfig, {
+  devtool: process.env.DEBUG_PROD ? 'source-map' : undefined,
 
   mode: 'production',
 
@@ -44,7 +40,7 @@ export default merge(baseConfig, {
       openAnalyzer: process.env.OPEN_ANALYZER === 'true',
     }),
 
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'production',
       DEBUG_PROD: false,
       START_MINIMIZED: false,

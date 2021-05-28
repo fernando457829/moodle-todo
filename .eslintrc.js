@@ -17,15 +17,14 @@ module.exports = {
     'import/resolver': {
       node: {},
       webpack: {
-        config: require.resolve('./webpack/webpack.config.eslint.js'),
+        config: require.resolve('./internal/webpack/webpack.config.eslint.js'),
       },
     },
   },
   overrides: [
     {
       files: [
-        'webpack/**',
-        'scripts/**',
+        'internal/**',
         'babel.config.js',
         'src/main.dev.ts',
       ],

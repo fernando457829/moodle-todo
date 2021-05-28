@@ -1,38 +1,42 @@
-import fs from 'fs';
-import webpack from 'webpack';
-import chalk from 'chalk';
-import { merge } from 'webpack-merge';
-import path from 'path';
-import { spawn, execSync } from 'child_process';
-import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
+const {
+  DllReferencePlugin,
+  NoEmitOnErrorsPlugin,
+  EnvironmentPlugin,
+  LoaderOptionsPlugin,
+} = require('webpack');
+const path = require('path');
+const fs = require('fs');
+const { spawn, execSync } = require('child_process');
+const { merge } = require('webpack-merge');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
-import { dllPath } from './utils/paths';
-import baseConfig from './webpack.config.base';
-import CheckNodeEnv from '../scripts/CheckNodeEnv';
+const baseConfig = require('./webpack.config.base');
+const { srcPath, dllPath } = require('../utils/paths');
+const isNodeEnv = require('../utils/isNodeEnv');
 
-if (process.env.NODE_ENV === 'production') {
-  CheckNodeEnv('development');
-}
+if (process.env.NODE_ENV === 'production') isNodeEnv('development');
 
 const port = process.env.PORT || 1212;
 const publicPath = `http://localhost:${port}/dist`;
-
 const manifestPath = path.join(dllPath, 'renderer.json');
 
-const requiredByDLLConfig = module.parent.filename.includes(
-  'webpack.config.renderer.dev.dll',
-);
+const requiredByDLLConfig = module.parent.filename.includes('webpack.config.renderer.dev.dll');
 
-if (!requiredByDLLConfig && !(fs.existsSync(dllPath) && fs.existsSync(manifestPath))) {
-  console.log(
-    chalk.black.bgYellow.bold(
-      'The DLL files are missing. Sit back while we build them for you with "yarn build-dll"',
-    ),
-  );
-  execSync('yarn postinstall');
+if (
+  !requiredByDLLConfig
+  && !(fs.existsSync(dllPath) && fs.existsSync(manifestPath))
+) {
+  console.log('The DLL files are missing. Building DLL...');
+
+  try {
+    execSync('yarn postinstall');
+  } catch (error) {
+    console.log(Buffer.from(error.stdout).toString());
+    process.exit(1);
+  }
 }
 
-export default merge(baseConfig, {
+module.exports = merge(baseConfig, {
   devtool: 'inline-source-map',
 
   mode: 'development',
@@ -42,7 +46,7 @@ export default merge(baseConfig, {
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
-    require.resolve('../src/index.tsx'),
+    require.resolve(path.join(srcPath, 'index.tsx')),
   ],
 
   output: {
@@ -59,9 +63,7 @@ export default merge(baseConfig, {
           {
             loader: require.resolve('babel-loader'),
             options: {
-              plugins: [
-                require.resolve('react-refresh/babel'),
-              ].filter(Boolean),
+              plugins: [require.resolve('react-refresh/babel')].filter(Boolean),
             },
           },
         ],
@@ -200,27 +202,25 @@ export default merge(baseConfig, {
     ],
   },
   plugins: [
-
-    requiredByDLLConfig
-      ? null
-      : new webpack.DllReferencePlugin({
+    !requiredByDLLConfig
+      && new DllReferencePlugin({
         context: dllPath,
         manifest: require(manifestPath),
         sourceType: 'var',
       }),
 
-    new webpack.NoEmitOnErrorsPlugin(),
+    new NoEmitOnErrorsPlugin(),
 
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
 
-    new webpack.LoaderOptionsPlugin({
+    new LoaderOptionsPlugin({
       debug: true,
     }),
 
     new ReactRefreshWebpackPlugin(),
-  ],
+  ].filter(Boolean),
 
   node: {
     __dirname: false,
