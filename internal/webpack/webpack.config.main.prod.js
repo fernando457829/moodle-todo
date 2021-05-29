@@ -11,8 +11,10 @@ const { rootPath } = require('../utils/paths');
 isNodeEnv('production');
 deleteSourceMaps();
 
+const openAnalyzer = process.env.OPEN_ANALYZER === 'true';
+
 module.exports = merge(baseConfig, {
-  devtool: process.env.DEBUG_PROD ? 'source-map' : undefined,
+  devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : undefined,
 
   mode: 'production',
 
@@ -35,9 +37,9 @@ module.exports = merge(baseConfig, {
 
   plugins: [
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-      openAnalyzer: process.env.OPEN_ANALYZER === 'true',
+      openAnalyzer,
+
+      analyzerMode: openAnalyzer ? 'server' : 'disabled',
     }),
 
     new EnvironmentPlugin({

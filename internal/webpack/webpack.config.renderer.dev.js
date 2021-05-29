@@ -36,7 +36,7 @@ module.exports = merge(baseConfig, {
   ],
 
   output: {
-    publicPath: `http://localhost:${port}/dist/`,
+    publicPath,
     filename: 'renderer.dev.js',
   },
 
@@ -60,7 +60,7 @@ module.exports = merge(baseConfig, {
     }),
 
     new ReactRefreshWebpackPlugin(),
-  ].filter(Boolean),
+  ],
 
   node: {
     __dirname: false,
@@ -76,26 +76,35 @@ module.exports = merge(baseConfig, {
     inline: true,
     lazy: false,
     hot: true,
+    contentBase: path.join(__dirname, 'dist'),
+
     headers: {
       'Access-Control-Allow-Origin': '*',
     },
-    contentBase: path.join(__dirname, 'dist'),
+
     watchOptions: {
       aggregateTimeout: 300,
       ignored: /node_modules/,
       poll: 100,
     },
+
     historyApiFallback: {
       verbose: true,
       disableDotRule: false,
     },
+
     before() {
       console.log('Starting Main Process...');
-      spawn('npm', ['run', 'start:main'], {
-        shell: true,
-        env: process.env,
-        stdio: 'inherit',
-      })
+
+      spawn(
+        'npm',
+        ['run', 'start:main'],
+        {
+          shell: true,
+          env: process.env,
+          stdio: 'inherit',
+        },
+      )
         .on('close', (code) => process.exit(code))
         .on('error', (spawnError) => console.error(spawnError));
     },

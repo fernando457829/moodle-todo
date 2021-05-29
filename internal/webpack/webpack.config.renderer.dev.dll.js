@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+const { DllPlugin, EnvironmentPlugin, LoaderOptionsPlugin } = require('webpack');
 const path = require('path');
 const { merge } = require('webpack-merge');
 
@@ -24,7 +24,7 @@ module.exports = merge(baseConfig, {
   module: rendererDevModule,
 
   entry: {
-    renderer: Object.keys(dependencies || {}),
+    renderer: Object.keys(dependencies),
   },
 
   output: {
@@ -35,16 +35,16 @@ module.exports = merge(baseConfig, {
   },
 
   plugins: [
-    new webpack.DllPlugin({
+    new DllPlugin({
       path: path.join(dllPath, '[name].json'),
       name: '[name]',
     }),
 
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
 
-    new webpack.LoaderOptionsPlugin({
+    new LoaderOptionsPlugin({
       debug: true,
       options: {
         context: srcPath,
