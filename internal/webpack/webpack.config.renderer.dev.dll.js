@@ -20,7 +20,7 @@ module.exports = merge(baseConfig, {
 
   externals: ['fsevents', 'crypto-browserify'],
 
-  module: require('./webpack.config.renderer.dev.babel').module,
+  module: require('./webpack.config.renderer.dev').module,
 
   entry: {
     renderer: Object.keys(dependencies || {}),
