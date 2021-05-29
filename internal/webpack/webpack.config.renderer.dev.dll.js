@@ -6,6 +6,7 @@ const baseConfig = require('./webpack.config.base');
 const { dependencies } = require('../../package.json');
 const { dllPath, srcPath } = require('../utils/paths');
 const isNodeEnv = require('../utils/isNodeEnv');
+const rendererDevModule = require('../utils/rendererDevModule');
 
 isNodeEnv('development');
 
@@ -20,7 +21,7 @@ module.exports = merge(baseConfig, {
 
   externals: ['fsevents', 'crypto-browserify'],
 
-  module: require('./webpack.config.renderer.dev').module,
+  module: rendererDevModule,
 
   entry: {
     renderer: Object.keys(dependencies || {}),
