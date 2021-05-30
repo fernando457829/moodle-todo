@@ -98,7 +98,6 @@
     "babel-loader": "^8.2.2",
     "babel-plugin-dev-expression": "^0.2.2",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
-    "browserslist-config-erb": "^0.0.1",
     "concurrently": "^6.2.0",
     "core-js": "^3.13.1",
     "cross-env": "^7.0.3",
@@ -145,7 +144,9 @@
       "cross-env NODE_ENV=development eslint --cache"
     ]
   },
-  "browserslist": [],
+  "browserslist": [
+    "electron 13.0.0"
+  ],
   "build": {
     "productName": "MoodleTODO",
     "appId": "com.fernando457829.moodle-todo",
