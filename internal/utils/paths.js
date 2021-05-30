@@ -9,9 +9,11 @@ const manifestPath = path.join(dllPath, 'renderer.json');
 const srcPath = path.join(rootPath, 'src');
 const srcMainPath = path.join(srcPath, 'main');
 const srcRendererPath = path.join(srcPath, 'renderer');
+const srcRendererTemplatePath = path.join(srcRendererPath, 'index.html');
 
 const buildPath = path.join(rootPath, 'build');
 const appPath = path.join(buildPath, 'app');
+const appNodeModulesPath = path.join(appPath, 'node_modules');
 const distPath = path.join(appPath, 'dist');
 
 module.exports = {
@@ -24,8 +26,10 @@ module.exports = {
   srcPath,
   srcMainPath,
   srcRendererPath,
+  srcRendererTemplatePath,
 
   buildPath,
   appPath,
+  appNodeModulesPath,
   distPath,
 };

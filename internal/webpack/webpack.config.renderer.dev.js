@@ -15,8 +15,9 @@ const {
   dllPath,
   manifestPath,
   distPath,
+  srcRendererTemplatePath,
+  appNodeModulesPath,
   srcRendererPath,
-  appPath,
 } = require('../utils/paths');
 const isNodeEnv = require('../utils/isNodeEnv');
 const buildDLL = require('../utils/buildDLL');
@@ -72,12 +73,12 @@ module.exports = merge(baseConfig, {
     new ReactRefreshWebpackPlugin(),
 
     new HtmlWebpackPlugin({
-      filename: path.join('index.html'),
-      template: path.join(srcRendererPath, 'index.html'),
+      filename: 'index.html',
+      template: srcRendererTemplatePath,
       isBrowser: false,
       env: process.env.NODE_ENV,
       isDevelopment: process.env.NODE_ENV !== 'production',
-      nodeModules: path.join(appPath, 'node_modules'),
+      nodeModules: appNodeModulesPath,
 
       minify: {
         collapseWhitespace: true,

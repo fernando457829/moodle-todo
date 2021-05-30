@@ -10,7 +10,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const baseConfig = require('./webpack.config.base');
 const isNodeEnv = require('../utils/isNodeEnv');
 const deleteSourceMaps = require('../utils/deleteSourceMaps');
-const { distPath, srcRendererPath } = require('../utils/paths');
+const { distPath, srcRendererPath, srcRendererTemplatePath } = require('../utils/paths');
 
 isNodeEnv('production');
 deleteSourceMaps();
@@ -144,7 +144,7 @@ module.exports = merge(baseConfig, {
 
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: path.join(srcRendererPath, 'index.html'),
+      template: srcRendererTemplatePath,
       minify: {
         collapseWhitespace: true,
         removeAttributeQuotes: true,
