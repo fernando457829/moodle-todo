@@ -5,27 +5,23 @@ const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 
 const baseConfig = require('./webpack.config.base');
-const isNodeEnv = require('../utils/isNodeEnv');
-const deleteSourceMaps = require('../utils/deleteSourceMaps');
-const { srcMainPath, distPath } = require('../utils/paths');
-
-isNodeEnv('production');
-deleteSourceMaps();
+const { srcPreloadPath, distPath } = require('../utils/paths');
 
 const openAnalyzer = process.env.OPEN_ANALYZER === 'true';
+const isDevelopment = process.env.NODE_ENV === 'development';
 
 module.exports = merge(baseConfig, {
   devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : undefined,
 
-  mode: 'production',
+  mode: isDevelopment ? 'development' : 'production',
 
-  target: 'electron-main',
+  target: 'electron-preload',
 
-  entry: path.join(srcMainPath, 'index.ts'),
+  entry: path.join(srcPreloadPath, 'index.ts'),
 
   output: {
-    path: distPath,
-    filename: 'main.js',
+    path: isDevelopment ? srcPreloadPath : distPath,
+    filename: 'preload.js',
   },
 
   optimization: {
@@ -44,9 +40,7 @@ module.exports = merge(baseConfig, {
     }),
 
     new EnvironmentPlugin({
-      NODE_ENV: 'production',
-      DEBUG_PROD: false,
-      START_MINIMIZED: false,
+      NODE_ENV: isDevelopment ? 'development' : 'production',
     }),
   ],
 

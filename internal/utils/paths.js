@@ -8,6 +8,7 @@ const manifestPath = path.join(dllPath, 'renderer.json');
 
 const srcPath = path.join(rootPath, 'src');
 const srcMainPath = path.join(srcPath, 'main');
+const srcPreloadPath = path.join(srcPath, 'preload');
 const srcRendererPath = path.join(srcPath, 'renderer');
 const srcRendererTemplatePath = path.join(srcRendererPath, 'index.html');
 
@@ -25,6 +26,7 @@ module.exports = {
 
   srcPath,
   srcMainPath,
+  srcPreloadPath,
   srcRendererPath,
   srcRendererTemplatePath,
 

@@ -69,7 +69,9 @@ const createWindow = async () => {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
-      preload: path.join(__dirname, 'preload.js'),
+      preload: process.env.NODE_ENV === 'production'
+        ? path.join(__dirname, 'preload.js')
+        : path.join(__dirname, '../preload/preload.js'),
     },
   });
 

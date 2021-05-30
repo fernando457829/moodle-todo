@@ -25,6 +25,7 @@
       "files": [
         "internal/**",
         "src/main/**",
+        "src/preload/**",
         "babel.config.js"
       ],
       "rules": {
