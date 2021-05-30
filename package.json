@@ -20,10 +20,11 @@
     "build:preload": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.preload.js",
     "build:preload:dev": "cross-env NODE_ENV=development webpack --config ./internal/webpack/webpack.config.preload.js",
     "build:renderer": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.renderer.prod.js",
+    "build:dll": "cross-env NODE_ENV=development webpack --config ./internal/webpack/webpack.config.renderer.dev.dll.js",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
     "package": "yarn clean:build && rm -rf src/dist && yarn build && electron-builder build --publish never",
-    "postinstall": "node internal/scripts/checkNativeDependencies.js && electron-builder install-app-deps && cross-env NODE_ENV=development webpack --config ./internal/webpack/webpack.config.renderer.dev.dll.js && yarn-deduplicate yarn.lock",
+    "postinstall": "node internal/scripts/checkNativeDependencies.js && electron-builder install-app-deps && yarn build:dll && yarn-deduplicate yarn.lock",
     "start": "node internal/scripts/checkPort.js && yarn build:preload:dev && yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ./internal/scripts/babelRegister ./src/main/index.ts",
     "start:renderer": "cross-env NODE_ENV=development webpack serve --config ./internal/webpack/webpack.config.renderer.dev.js"
