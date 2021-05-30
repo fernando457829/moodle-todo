@@ -27,7 +27,7 @@ module.exports = merge(baseConfig, {
 
   output: {
     path: dllPath,
-    filename: '[name].dev.dll.js',
+    filename: '[name].dll.js',
     library: {
       name: 'renderer',
       type: 'var',
