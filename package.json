@@ -13,6 +13,8 @@
   "homepage": "https://github.com/fernando457829/moodle-todo#readme",
   "license": "MIT",
   "scripts": {
+    "clean": "node internal/scripts/clean.js",
+    "clean:build": "yarn clean dist release",
     "build": "concurrently \"yarn build:main\" \"yarn build:preload\" \"yarn build:renderer\"",
     "build:main": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.main.prod.js",
     "build:preload": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.preload.js",
@@ -20,7 +22,7 @@
     "build:renderer": "cross-env NODE_ENV=production webpack --config ./internal/webpack/webpack.config.renderer.prod.js",
     "rebuild": "electron-rebuild --parallel --types prod,dev,optional --module-dir src",
     "lint": "cross-env NODE_ENV=development eslint . --cache --ext .js,.jsx,.ts,.tsx",
-    "package": "rm -rf src/dist && yarn build && electron-builder build --publish never",
+    "package": "yarn clean:build && rm -rf src/dist && yarn build && electron-builder build --publish never",
     "postinstall": "node internal/scripts/checkNativeDependencies.js && electron-builder install-app-deps && cross-env NODE_ENV=development webpack --config ./internal/webpack/webpack.config.renderer.dev.dll.js && yarn-deduplicate yarn.lock",
     "start": "node internal/scripts/checkPort.js && yarn build:preload:dev && yarn start:renderer",
     "start:main": "cross-env NODE_ENV=development electron -r ./internal/scripts/babelRegister ./src/main/index.ts",
