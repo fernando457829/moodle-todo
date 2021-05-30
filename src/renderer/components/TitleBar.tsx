@@ -1,4 +1,4 @@
-import React, { memo, useEffect } from 'react';
+import React, { memo } from 'react';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 import {
   VscChromeClose,
@@ -14,7 +14,7 @@ import TitleBarButton from './TitleBarButton';
 function TitleBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
   const buttonBackgroundColor = useColorModeValue('white', 'gray.800');
-  const [MiddleIcon, toggleIsMaximazed] = useToggleValue(VscChromeRestore, VscChromeMaximize);
+  const [MiddleIcon] = useToggleValue(VscChromeRestore, VscChromeMaximize);
 
   // useEffect(() => {
   //   function handleUnmaximize() {

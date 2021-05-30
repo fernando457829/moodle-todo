@@ -3,7 +3,7 @@
   "rules": {
     "react/jsx-props-no-spreading": "off",
     "react/prop-types": "off",
-    "import/no-extraneous-dependencies": "off",
+
     "import/prefer-default-export": "off"
   },
   "parserOptions": {
@@ -31,7 +31,13 @@
         "global-require": "off",
         "no-console": "off",
 
-        "import/no-dynamic-require": "off"
+        "import/no-dynamic-require": "off",
+        "import/no-extraneous-dependencies": [
+          "error",
+          {
+            "devDependencies": true
+          }
+        ]
       }
     }
   ]
