@@ -1,5 +1,3 @@
-const developmentEnvironments = ['development', 'test'];
-
 const developmentPlugins = [require('@babel/plugin-transform-runtime')];
 
 const productionPlugins = [
@@ -10,7 +8,7 @@ const productionPlugins = [
 ];
 
 module.exports = (api) => {
-  const development = api.env(developmentEnvironments);
+  const development = api.env('development');
 
   return {
     presets: [
