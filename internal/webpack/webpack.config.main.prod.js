@@ -1,4 +1,5 @@
 const { EnvironmentPlugin } = require('webpack');
+const path = require('path');
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -6,7 +7,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const baseConfig = require('./webpack.config.base');
 const isNodeEnv = require('../utils/isNodeEnv');
 const deleteSourceMaps = require('../utils/deleteSourceMaps');
-const { rootPath } = require('../utils/paths');
+const { srcMainPath, distPath } = require('../utils/paths');
 
 isNodeEnv('production');
 deleteSourceMaps();
@@ -20,11 +21,14 @@ module.exports = merge(baseConfig, {
 
   target: 'electron-main',
 
-  entry: './src/main.dev.ts',
+  entry: {
+    main: path.join(srcMainPath, 'index.ts'),
+    preload: path.join(srcMainPath, 'preload.js'),
+  },
 
   output: {
-    path: rootPath,
-    filename: './src/main.prod.js',
+    path: distPath,
+    filename: '[name].js',
   },
 
   optimization: {

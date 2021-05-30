@@ -11,8 +11,6 @@ const rendererDevModule = require('../utils/rendererDevModule');
 isNodeEnv('development');
 
 module.exports = merge(baseConfig, {
-  context: path.join(__dirname, '..'),
-
   devtool: 'eval',
 
   mode: 'development',
@@ -28,10 +26,12 @@ module.exports = merge(baseConfig, {
   },
 
   output: {
-    library: 'renderer',
     path: dllPath,
     filename: '[name].dev.dll.js',
-    libraryTarget: 'var',
+    library: {
+      name: 'renderer',
+      type: 'var',
+    },
   },
 
   plugins: [

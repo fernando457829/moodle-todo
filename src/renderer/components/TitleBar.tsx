@@ -6,7 +6,7 @@ import {
   VscChromeMinimize,
   VscChromeRestore,
 } from 'react-icons/vsc';
-import { ipcRenderer } from 'electron';
+// import { ipcRenderer } from 'electron';
 
 import useToggleValue from '../hooks/useToggleValue';
 import TitleBarButton from './TitleBarButton';
@@ -16,30 +16,30 @@ function TitleBar() {
   const buttonBackgroundColor = useColorModeValue('white', 'gray.800');
   const [MiddleIcon, toggleIsMaximazed] = useToggleValue(VscChromeRestore, VscChromeMaximize);
 
-  useEffect(() => {
-    function handleUnmaximize() {
-      toggleIsMaximazed(false);
-    }
+  // useEffect(() => {
+  //   function handleUnmaximize() {
+  //     toggleIsMaximazed(false);
+  //   }
 
-    function handleMaximize() {
-      toggleIsMaximazed(true);
-    }
+  //   function handleMaximize() {
+  //     toggleIsMaximazed(true);
+  //   }
 
-    ipcRenderer.invoke('window-is-maximized').then((value: boolean) => toggleIsMaximazed(value));
+  //   ipcRenderer.invoke('window-is-maximized').then((value: boolean) => toggleIsMaximazed(value));
 
-    ipcRenderer.addListener('unmaximize', handleUnmaximize);
-    ipcRenderer.addListener('maximize', handleMaximize);
+  //   ipcRenderer.addListener('unmaximize', handleUnmaximize);
+  //   ipcRenderer.addListener('maximize', handleMaximize);
 
-    return () => {
-      ipcRenderer.removeListener('unmaximize', handleUnmaximize);
-      ipcRenderer.removeListener('maximize', handleMaximize);
-    };
-  }, []);
+  //   return () => {
+  //     ipcRenderer.removeListener('unmaximize', handleUnmaximize);
+  //     ipcRenderer.removeListener('maximize', handleMaximize);
+  //   };
+  // }, []);
 
-  function handleMiddleIconClick() {
-    ipcRenderer.invoke('window-maximize');
-    toggleIsMaximazed();
-  }
+  // function handleMiddleIconClick() {
+  //   ipcRenderer.invoke('window-maximize');
+  //   toggleIsMaximazed();
+  // }
 
   return (
     <Box
@@ -60,18 +60,25 @@ function TitleBar() {
       }}
     >
       <TitleBarButton
-        onClick={() => ipcRenderer.invoke('window-minimize')}
+        onClick={() => (window as any).electron.test()}
+        // onClick={() => ipcRenderer.invoke('window-minimize')}
         backgroundColor={buttonBackgroundColor}
       >
         <VscChromeMinimize />
       </TitleBarButton>
       <TitleBarButton
-        onClick={handleMiddleIconClick}
+        onClick={() => {}}
+        // onClick={handleMiddleIconClick}
         backgroundColor={buttonBackgroundColor}
       >
         <MiddleIcon />
       </TitleBarButton>
-      <TitleBarButton onClick={() => ipcRenderer.invoke('window-close')} backgroundColor="red" color="white">
+      <TitleBarButton
+        onClick={() => {}}
+        // onClick={() => ipcRenderer.invoke('window-close')}
+        backgroundColor="red"
+        color="white"
+      >
         <VscChromeClose />
       </TitleBarButton>
     </Box>

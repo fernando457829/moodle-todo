@@ -5,11 +5,12 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 const baseConfig = require('./webpack.config.base');
 const isNodeEnv = require('../utils/isNodeEnv');
 const deleteSourceMaps = require('../utils/deleteSourceMaps');
-const { srcPath } = require('../utils/paths');
+const { distPath, srcRendererPath } = require('../utils/paths');
 
 isNodeEnv('production');
 deleteSourceMaps();
@@ -21,18 +22,21 @@ module.exports = merge(baseConfig, {
 
   mode: 'production',
 
-  target: 'electron-renderer',
+  target: ['web', 'electron-renderer'],
 
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
-    path.join(srcPath, 'index.tsx'),
+    path.join(srcRendererPath, 'index.tsx'),
   ],
 
   output: {
-    path: path.join(srcPath, 'dist'),
-    publicPath: './dist/',
-    filename: 'renderer.prod.js',
+    path: distPath,
+    publicPath: './',
+    filename: 'renderer.js',
+    library: {
+      type: 'umd',
+    },
   },
 
   module: {
@@ -136,6 +140,18 @@ module.exports = merge(baseConfig, {
       openAnalyzer,
 
       analyzerMode: openAnalyzer ? 'server' : 'disabled',
+    }),
+
+    new HtmlWebpackPlugin({
+      filename: 'index.html',
+      template: path.join(srcRendererPath, 'index.html'),
+      minify: {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true,
+      },
+      isBrowser: false,
+      isDevelopment: process.env.NODE_ENV !== 'production',
     }),
   ],
 });

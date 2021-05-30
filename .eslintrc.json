@@ -24,8 +24,8 @@
     {
       "files": [
         "internal/**",
-        "babel.config.js",
-        "src/main.dev.ts"
+        "src/main/**",
+        "babel.config.js"
       ],
       "rules": {
         "global-require": "off",

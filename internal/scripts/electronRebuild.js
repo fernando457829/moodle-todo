@@ -2,10 +2,10 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 
-const { dependencies } = require('../../src/package.json');
-const { rootPath, srcPath } = require('../utils/paths');
+const { rootPath, appPath } = require('../utils/paths');
+const { dependencies } = require('../../build/app/package.json');
 
-const nodeModulesPath = path.join(srcPath, 'node_modules');
+const nodeModulesPath = path.join(appPath, 'node_modules');
 
 if (Object.keys(dependencies || {}).length && fs.existsSync(nodeModulesPath)) {
   spawnSync(

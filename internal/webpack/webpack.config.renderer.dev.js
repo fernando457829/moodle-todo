@@ -7,10 +7,17 @@ const {
 const path = require('path');
 const { spawn } = require('child_process');
 const { merge } = require('webpack-merge');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
 
 const baseConfig = require('./webpack.config.base');
-const { srcPath, dllPath, manifestPath } = require('../utils/paths');
+const {
+  dllPath,
+  manifestPath,
+  distPath,
+  srcRendererPath,
+  appPath,
+} = require('../utils/paths');
 const isNodeEnv = require('../utils/isNodeEnv');
 const buildDLL = require('../utils/buildDLL');
 const rendererDevModule = require('../utils/rendererDevModule');
@@ -20,24 +27,27 @@ if (process.env.NODE_ENV === 'production') isNodeEnv('development');
 buildDLL();
 
 const port = process.env.PORT || 1212;
-const publicPath = `http://localhost:${port}/dist`;
 
 module.exports = merge(baseConfig, {
   devtool: 'inline-source-map',
 
   mode: 'development',
 
-  target: 'electron-renderer',
+  target: ['web', 'electron-renderer'],
 
   entry: [
     'core-js',
     'regenerator-runtime/runtime',
-    require.resolve(path.join(srcPath, 'index.tsx')),
+    require.resolve(path.join(srcRendererPath, 'index.tsx')),
   ],
 
   output: {
-    publicPath,
-    filename: 'renderer.dev.js',
+    path: distPath,
+    publicPath: '/',
+    filename: 'renderer.js',
+    library: {
+      type: 'umd',
+    },
   },
 
   module: rendererDevModule,
@@ -60,6 +70,21 @@ module.exports = merge(baseConfig, {
     }),
 
     new ReactRefreshWebpackPlugin(),
+
+    new HtmlWebpackPlugin({
+      filename: path.join('index.html'),
+      template: path.join(srcRendererPath, 'index.html'),
+      isBrowser: false,
+      env: process.env.NODE_ENV,
+      isDevelopment: process.env.NODE_ENV !== 'production',
+      nodeModules: path.join(appPath, 'node_modules'),
+
+      minify: {
+        collapseWhitespace: true,
+        removeAttributeQuotes: true,
+        removeComments: true,
+      },
+    }),
   ],
 
   node: {
@@ -69,14 +94,13 @@ module.exports = merge(baseConfig, {
 
   devServer: {
     port,
-    publicPath,
+    publicPath: '/',
     compress: true,
     noInfo: false,
     stats: 'errors-only',
     inline: true,
     lazy: false,
     hot: true,
-    contentBase: path.join(__dirname, 'dist'),
 
     headers: {
       'Access-Control-Allow-Origin': '*',

@@ -67,11 +67,17 @@ const createWindow = async () => {
     icon: getAssetPath('icon.png'),
     frame: false,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
+      contextIsolation: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(
+    process.env.NODE_ENV === 'development'
+      ? `http://localhost:${process.env.PORT || 1212}/index.html`
+      : `file://${path.resolve(__dirname, 'index.html')}`,
+  );
 
   // @TODO: Use 'ready-to-show' event
   //        https://github.com/electron/electron/blob/master/docs/api/browser-window.md#using-ready-to-show-event
