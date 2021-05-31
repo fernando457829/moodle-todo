@@ -10,5 +10,7 @@
     "electron-rebuild": "node ../../internal/scripts/electronRebuild.js",
     "postinstall": "yarn electron-rebuild"
   },
-  "dependencies": {}
+  "dependencies": {
+    "sqlite3": "^5.0.2"
+  }
 }
