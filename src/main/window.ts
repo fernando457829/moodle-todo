@@ -7,6 +7,8 @@ import getAsset from './utils/getAsset';
 class Window {
   private instance: BrowserWindow | null = null;
 
+  private readyListeners: Function[] = [];
+
   isMaximized = () => this.instance?.isMaximized();
 
   minimize = () => this.instance?.minimize();
@@ -19,7 +21,10 @@ class Window {
 
   send = (channel: string, ...args: any[]) => this.instance?.webContents.send(channel, ...args);
 
-  on = (channel: any, listener: (...args: any) => void) => this.instance?.on(channel, listener);
+  on(event: any, listener: (...args: any) => void) {
+    if (event === 'ready') this.readyListeners.push(listener);
+    else this.instance?.on(event, listener);
+  }
 
   create() {
     this.instance = new BrowserWindow({
@@ -65,6 +70,8 @@ class Window {
         action: 'deny',
       };
     });
+
+    this.readyListeners.forEach((listener) => listener());
   }
 }
 

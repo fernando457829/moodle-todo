@@ -14,6 +14,8 @@ ipcMain.handle(WindowChannels.MAXIMIZE, () => window.maximize());
 
 ipcMain.handle(WindowChannels.CLOSE, () => window.close());
 
-window.on('maximize', () => window.send(WindowEvents.MAXIMIZE));
+window.on('ready', () => {
+  window.on('maximize', () => window.send(WindowEvents.MAXIMIZE));
 
-window.on('unmaximize', () => window.send(WindowEvents.UNMAXIMIZE));
+  window.on('unmaximize', () => window.send(WindowEvents.UNMAXIMIZE));
+});
