@@ -1,4 +1,5 @@
 const { EnvironmentPlugin } = require('webpack');
+const path = require('path');
 const { merge } = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
@@ -6,23 +7,25 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const baseConfig = require('./webpack.config.base');
 const isNodeEnv = require('../utils/isNodeEnv');
 const deleteSourceMaps = require('../utils/deleteSourceMaps');
-const { rootPath } = require('../utils/paths');
+const { srcMainPath, distPath } = require('../utils/paths');
 
 isNodeEnv('production');
 deleteSourceMaps();
 
+const openAnalyzer = process.env.OPEN_ANALYZER === 'true';
+
 module.exports = merge(baseConfig, {
-  devtool: process.env.DEBUG_PROD ? 'source-map' : undefined,
+  devtool: process.env.DEBUG_PROD === 'true' ? 'source-map' : undefined,
 
   mode: 'production',
 
   target: 'electron-main',
 
-  entry: './src/main.dev.ts',
+  entry: path.join(srcMainPath, 'index.ts'),
 
   output: {
-    path: rootPath,
-    filename: './src/main.prod.js',
+    path: distPath,
+    filename: 'main.js',
   },
 
   optimization: {
@@ -35,9 +38,9 @@ module.exports = merge(baseConfig, {
 
   plugins: [
     new BundleAnalyzerPlugin({
-      analyzerMode:
-        process.env.OPEN_ANALYZER === 'true' ? 'server' : 'disabled',
-      openAnalyzer: process.env.OPEN_ANALYZER === 'true',
+      openAnalyzer,
+
+      analyzerMode: openAnalyzer ? 'server' : 'disabled',
     }),
 
     new EnvironmentPlugin({

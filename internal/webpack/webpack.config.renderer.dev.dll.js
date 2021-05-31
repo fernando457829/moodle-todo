@@ -1,4 +1,4 @@
-const webpack = require('webpack');
+const { DllPlugin, EnvironmentPlugin, LoaderOptionsPlugin } = require('webpack');
 const path = require('path');
 const { merge } = require('webpack-merge');
 
@@ -6,12 +6,11 @@ const baseConfig = require('./webpack.config.base');
 const { dependencies } = require('../../package.json');
 const { dllPath, srcPath } = require('../utils/paths');
 const isNodeEnv = require('../utils/isNodeEnv');
+const rendererDevModule = require('../utils/rendererDevModule');
 
 isNodeEnv('development');
 
 module.exports = merge(baseConfig, {
-  context: path.join(__dirname, '..'),
-
   devtool: 'eval',
 
   mode: 'development',
@@ -20,30 +19,32 @@ module.exports = merge(baseConfig, {
 
   externals: ['fsevents', 'crypto-browserify'],
 
-  module: require('./webpack.config.renderer.dev.babel').module,
+  module: rendererDevModule,
 
   entry: {
-    renderer: Object.keys(dependencies || {}),
+    renderer: Object.keys(dependencies),
   },
 
   output: {
-    library: 'renderer',
     path: dllPath,
-    filename: '[name].dev.dll.js',
-    libraryTarget: 'var',
+    filename: '[name].dll.js',
+    library: {
+      name: 'renderer',
+      type: 'var',
+    },
   },
 
   plugins: [
-    new webpack.DllPlugin({
+    new DllPlugin({
       path: path.join(dllPath, '[name].json'),
       name: '[name]',
     }),
 
-    new webpack.EnvironmentPlugin({
+    new EnvironmentPlugin({
       NODE_ENV: 'development',
     }),
 
-    new webpack.LoaderOptionsPlugin({
+    new LoaderOptionsPlugin({
       debug: true,
       options: {
         context: srcPath,

@@ -1,7 +1,7 @@
 const { EnvironmentPlugin } = require('webpack');
 
-const { dependencies } = require('../../src/package.json');
 const { srcPath } = require('../utils/paths');
+const { dependencies } = require('../../build/app/package.json');
 
 module.exports = {
   externals: Object.keys(dependencies || {}),
@@ -23,7 +23,9 @@ module.exports = {
 
   output: {
     path: srcPath,
-    libraryTarget: 'commonjs2',
+    library: {
+      type: 'commonjs2',
+    },
   },
 
   resolve: {

@@ -6,15 +6,14 @@ import {
   VscChromeMinimize,
   VscChromeRestore,
 } from 'react-icons/vsc';
-import { ipcRenderer } from 'electron';
+import { useToggle } from 'react-use';
 
-import useToggleValue from '../hooks/useToggleValue';
 import TitleBarButton from './TitleBarButton';
 
 function TitleBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
   const buttonBackgroundColor = useColorModeValue('white', 'gray.800');
-  const [MiddleIcon, toggleIsMaximazed] = useToggleValue(VscChromeRestore, VscChromeMaximize);
+  const [isMaximazed, toggleIsMaximazed] = useToggle(false);
 
   useEffect(() => {
     function handleUnmaximize() {
@@ -25,21 +24,16 @@ function TitleBar() {
       toggleIsMaximazed(true);
     }
 
-    ipcRenderer.invoke('window-is-maximized').then((value: boolean) => toggleIsMaximazed(value));
+    window.windowManager.isMaximized().then((value) => toggleIsMaximazed(value));
 
-    ipcRenderer.addListener('unmaximize', handleUnmaximize);
-    ipcRenderer.addListener('maximize', handleMaximize);
+    window.windowManager.addMaximizeListener(handleMaximize);
+    window.windowManager.addUnmaximizeListener(handleUnmaximize);
 
     return () => {
-      ipcRenderer.removeListener('unmaximize', handleUnmaximize);
-      ipcRenderer.removeListener('maximize', handleMaximize);
+      window.windowManager.removeMaximizeListener(handleMaximize);
+      window.windowManager.removeUnmaximizeListener(handleUnmaximize);
     };
   }, []);
-
-  function handleMiddleIconClick() {
-    ipcRenderer.invoke('window-maximize');
-    toggleIsMaximazed();
-  }
 
   return (
     <Box
@@ -60,18 +54,27 @@ function TitleBar() {
       }}
     >
       <TitleBarButton
-        onClick={() => ipcRenderer.invoke('window-minimize')}
+        onClick={() => window.windowManager.minimize()}
         backgroundColor={buttonBackgroundColor}
       >
         <VscChromeMinimize />
       </TitleBarButton>
       <TitleBarButton
-        onClick={handleMiddleIconClick}
+        onClick={
+          () => {
+            if (isMaximazed) window.windowManager.restore();
+            else window.windowManager.maximize();
+          }
+        }
         backgroundColor={buttonBackgroundColor}
       >
-        <MiddleIcon />
+        {isMaximazed ? <VscChromeRestore /> : <VscChromeMaximize />}
       </TitleBarButton>
-      <TitleBarButton onClick={() => ipcRenderer.invoke('window-close')} backgroundColor="red" color="white">
+      <TitleBarButton
+        onClick={() => window.windowManager.close()}
+        backgroundColor="red"
+        color="white"
+      >
         <VscChromeClose />
       </TitleBarButton>
     </Box>

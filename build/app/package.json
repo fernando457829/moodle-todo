@@ -3,11 +3,11 @@
   "productName": "MoodleTODO",
   "version": "0.0.1",
   "description": "Desktop App for Moodle",
-  "main": "./main.prod.js",
+  "main": "./dist/main.js",
   "author": "Fernando Silva <fernando457829@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "electron-rebuild": "node ../internal/scripts/electronRebuild.js",
+    "electron-rebuild": "node ../../internal/scripts/electronRebuild.js",
     "postinstall": "yarn electron-rebuild"
   },
   "dependencies": {}
