@@ -4,52 +4,68 @@ import path from 'path';
 import { isDevelopment } from './utils/env';
 import getAsset from './utils/getAsset';
 
-let window: BrowserWindow | null = null;
+class Window {
+  private instance: BrowserWindow | null = null;
 
-export default window;
+  isMaximized = () => this.instance?.isMaximized();
 
-export async function create() {
-  window = new BrowserWindow({
-    show: false,
-    width: 1024,
-    height: 728,
-    icon: getAsset('icon.png'),
-    frame: false,
-    webPreferences: {
-      nodeIntegration: false,
-      contextIsolation: true,
-      preload: isDevelopment
-        ? path.join(__dirname, '../preload/preload.js')
-        : path.join(__dirname, 'preload.js'),
-    },
-  });
+  minimize = () => this.instance?.minimize();
 
-  window.loadURL(
-    isDevelopment
-      ? `http://localhost:${process.env.PORT || 1212}/index.html`
-      : `file://${path.resolve(__dirname, 'index.html')}`,
-  );
+  restore = () => this.instance?.restore();
 
-  window.setMenu(null);
+  maximize = () => this.instance?.isMaximizable() && this.instance?.maximize();
 
-  window.on('ready-to-show', () => {
-    if (process.env.START_MINIMIZED) {
-      window?.minimize();
-    } else {
-      window?.show();
-      window?.focus();
-    }
-  });
+  close = () => this.instance?.close();
 
-  window.on('closed', () => {
-    window = null;
-  });
+  send = (channel: string, ...args: any[]) => this.instance?.webContents.send(channel, ...args);
 
-  window.webContents.setWindowOpenHandler(({ url }) => {
-    shell.openExternal(url);
+  on = (channel: any, listener: (...args: any) => void) => this.instance?.on(channel, listener);
 
-    return {
-      action: 'deny',
-    };
-  });
+  create() {
+    this.instance = new BrowserWindow({
+      show: false,
+      width: 1024,
+      height: 728,
+      icon: getAsset('icon.png'),
+      frame: false,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+        preload: isDevelopment
+          ? path.join(__dirname, '../preload/preload.js')
+          : path.join(__dirname, 'preload.js'),
+      },
+    });
+
+    this.instance.loadURL(
+      isDevelopment
+        ? `http://localhost:${process.env.PORT || 1212}/index.html`
+        : `file://${path.resolve(__dirname, 'index.html')}`,
+    );
+
+    this.instance.setMenu(null);
+
+    this.instance.on('ready-to-show', () => {
+      if (process.env.START_MINIMIZED) {
+        this.instance?.minimize();
+      } else {
+        this.instance?.show();
+        this.instance?.focus();
+      }
+    });
+
+    this.instance.on('closed', () => {
+      this.instance = null;
+    });
+
+    this.instance.webContents.setWindowOpenHandler(({ url }) => {
+      shell.openExternal(url);
+
+      return {
+        action: 'deny',
+      };
+    });
+  }
 }
+
+export default new Window();

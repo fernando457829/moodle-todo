@@ -5,7 +5,7 @@ import { app } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 
-import window, { create } from './window';
+import window from './window';
 import { debugProduction, isDevelopment } from './utils/env';
 import installExtensions from './utils/installExtensions';
 
@@ -18,7 +18,7 @@ if (isDevelopment || debugProduction) require('electron-debug')();
 async function start() {
   if (isDevelopment || debugProduction) await installExtensions();
 
-  await create();
+  window.create();
 
   log.transports.file.level = 'info';
 
