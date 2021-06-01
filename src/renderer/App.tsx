@@ -7,6 +7,7 @@ import { DataProvider } from './contexts/DataContext';
 import theme from './styles/theme';
 import TitleBar from './components/TitleBar';
 import Scrollbar from './components/Scrollbar';
+import FooterBar from './components/FooterBar';
 
 export default function App() {
   const [state, dispatch] = createDataReducer();
@@ -14,11 +15,12 @@ export default function App() {
   return (
     <ChakraProvider theme={theme}>
       <TitleBar />
-      <Scrollbar height="calc(100vh - 1.5rem)">
+      <Scrollbar height="calc(100vh - 3rem)">
         <DataProvider value={{ state, dispatch }}>
           <Router />
         </DataProvider>
       </Scrollbar>
+      <FooterBar />
     </ChakraProvider>
   );
 }
