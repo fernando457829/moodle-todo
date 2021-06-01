@@ -29,7 +29,7 @@ function FooterBar() {
         hoverBackgroundColor={buttonBackgroundColor}
         color="gray.500"
         fontSize="12px"
-        onClick={() => {}}
+        onClick={() => window.open('https://github.com/fernando457829', '_blank')}
       >
         Criado por fernando457829
       </BarButton>
