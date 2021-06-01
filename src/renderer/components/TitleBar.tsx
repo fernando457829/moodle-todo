@@ -8,7 +8,7 @@ import {
 } from 'react-icons/vsc';
 import { useToggle } from 'react-use';
 
-import TitleBarButton from './TitleBarButton';
+import BarButton from './BarButton';
 
 function TitleBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
@@ -53,30 +53,30 @@ function TitleBar() {
         WebkitUserSelect: 'none',
       }}
     >
-      <TitleBarButton
+      <BarButton
+        hoverBackgroundColor={buttonBackgroundColor}
         onClick={() => window.windowManager.minimize()}
-        backgroundColor={buttonBackgroundColor}
       >
         <VscChromeMinimize />
-      </TitleBarButton>
-      <TitleBarButton
+      </BarButton>
+      <BarButton
+        hoverBackgroundColor={buttonBackgroundColor}
         onClick={
           () => {
             if (isMaximazed) window.windowManager.restore();
             else window.windowManager.maximize();
           }
         }
-        backgroundColor={buttonBackgroundColor}
       >
         {isMaximazed ? <VscChromeRestore /> : <VscChromeMaximize />}
-      </TitleBarButton>
-      <TitleBarButton
-        onClick={() => window.windowManager.close()}
-        backgroundColor="red"
+      </BarButton>
+      <BarButton
+        hoverBackgroundColor="red"
         color="white"
+        onClick={() => window.windowManager.close()}
       >
         <VscChromeClose />
-      </TitleBarButton>
+      </BarButton>
     </Box>
   );
 }
