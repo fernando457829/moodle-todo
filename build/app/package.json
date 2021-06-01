@@ -1,7 +1,7 @@
 {
   "name": "moodle-todo",
   "productName": "MoodleTODO",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "Desktop App for Moodle",
   "main": "./dist/main.js",
   "author": "Fernando Silva <fernando457829@gmail.com>",
