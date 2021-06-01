@@ -7,7 +7,7 @@ export type BarButtonProps = BoxProps & {
 };
 
 export default function BarButton(props: BarButtonProps) {
-  const { hoverBackgroundColor, hoverColor } = props;
+  const { hoverBackgroundColor, hoverColor, ...boxProps } = props;
 
   return (
     <Box
@@ -26,7 +26,7 @@ export default function BarButton(props: BarButtonProps) {
           color: hoverColor,
         },
       }}
-      {...props}
+      {...boxProps}
     />
   );
 }
