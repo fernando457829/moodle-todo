@@ -34,7 +34,7 @@ module.exports = merge(baseConfig, {
 
   mode: 'development',
 
-  target: ['web', 'electron-renderer'],
+  target: 'web',
 
   entry: [
     'core-js',
