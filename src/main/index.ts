@@ -10,6 +10,7 @@ import { debugProduction, isDevelopment } from './utils/env';
 import installExtensions from './utils/installExtensions';
 
 import './apis/windowManager';
+import './apis/updateManager';
 
 if (!isDevelopment) require('source-map-support').install();
 
@@ -23,7 +24,11 @@ async function start() {
   log.transports.file.level = 'info';
 
   autoUpdater.logger = log;
-  autoUpdater.checkForUpdatesAndNotify();
+
+  // TODO: Disable pre releases when publish stable version
+  autoUpdater.allowPrerelease = true;
+
+  autoUpdater.checkForUpdates();
 }
 
 app.on('window-all-closed', () => {

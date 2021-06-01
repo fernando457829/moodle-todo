@@ -5,3 +5,9 @@ export enum WindowChannels {
   MAXIMIZE = 'window-maximize',
   CLOSE = 'window-close',
 }
+
+export enum UpdateChannels {
+  VERSION = 'version',
+  CHECK_FOR_UPDATE = 'check-for-update',
+  INSTALL = 'install',
+}

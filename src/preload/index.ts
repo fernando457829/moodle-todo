@@ -1,1 +1,2 @@
 import './windowManager';
+import './updateManager';
