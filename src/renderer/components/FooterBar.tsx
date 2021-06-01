@@ -6,7 +6,6 @@ import BarButton from './BarButton';
 function FooterBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
   const buttonBackgroundColor = useColorModeValue('white', 'gray.800');
-  const buttonTextColor = useColorModeValue('gray.400', 'gray.600');
 
   return (
     <Box
@@ -20,7 +19,7 @@ function FooterBar() {
     >
       <BarButton
         hoverBackgroundColor={buttonBackgroundColor}
-        color={buttonTextColor}
+        color="gray.500"
         fontSize="12px"
         onClick={() => {}}
       >
@@ -28,7 +27,7 @@ function FooterBar() {
       </BarButton>
       <BarButton
         hoverBackgroundColor={buttonBackgroundColor}
-        color={buttonTextColor}
+        color="gray.500"
         fontSize="12px"
         onClick={() => {}}
       >
