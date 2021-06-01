@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Box, useColorModeValue } from '@chakra-ui/react';
 
 import BarButton from './BarButton';
+import UpdateNotification from './UpdateNotification';
 
 function FooterBar() {
   const backgroundColor = useColorModeValue('gray.100', 'gray.900');
@@ -17,14 +18,11 @@ function FooterBar() {
       alignItems="center"
       backgroundColor={backgroundColor}
     >
-      <BarButton
+      <UpdateNotification
         hoverBackgroundColor={buttonBackgroundColor}
         color="gray.500"
         fontSize="12px"
-        onClick={() => {}}
-      >
-        v0.1.0
-      </BarButton>
+      />
       <BarButton
         hoverBackgroundColor={buttonBackgroundColor}
         color="gray.500"
